@@ -426,6 +426,111 @@ logging.file.name=app.log
 🔹 Setting TRACE level for this package means all logs (TRACE, DEBUG, INFO, WARN, ERROR) will be printed.
 🔹 If we change it to INFO, only INFO, WARN, and ERROR logs will be recorded.  	
 
+
+----------------------------------------------------------
+interview Questions
+
+1.what are the log levels ?
+ans - TRACE  -when you want to give more detailed information.
+      DEBUG - user has entered the username ,user now registering, user creation successfully ,we can keep it such kind of messages.
+      INFO -Basic info ,method started ,method ended we can give that info.
+      WARN -it gives the error ,something went wrong ,memory low,
+  
+
+2.By default what is the log level spring boot use?
+ans -INFO.
+
+3.Highest log level is TRACE but the default log level is INFO.
+
+4.How do you generate a log file?
+ans - we'll just go to the properties file and we'll give here logging.file.name=app.log   . after running the application app.log file will be 
+ generated where you can get the log messages.
+
+
+5.what is the purpose of logs?
+ans -To understand the application's activities like user has registered ,Ordered is placed ,user has logged in ,we keep all the application's activites.
+
+6.if something goes wrong in your server how do you know what went wrong?
+ans -  We'll analyze the log file .
+
+7.how do you set the log file?
+ans -Sir spring-boot by default comes with SLF4j and its implementation is logback . In my project I've used logback which is the default implementation of Springboot.  by using logback all the messages being logged and all the messages is generated in a particular log file .for which i had given in properties file the path where the log file should be generated .then from those log file i would basically analyze that.
+
+8.How did you analyze that?
+ans -For that we used ELK (elastic Search,  logStash ,Kibana)   
+
+------------------------------------------------------------------------------------------------------------------------------------------
+
+9.what logstash do?
+ans - it reads your logs from the server.  logStash will keep reading it .whatever logs are generated in the server. After reading the logs ,
+  the logstash will give the logs to the ELastic Search.
+
+
+10.What Elasticsearch do?
+
+ans - After getting the logs from logstash . it present the logs in a UI .  In order to present that we use Kibana.
+      runs on default port no -> 9200
+
+
+11.what kibana do?
+
+ans -its A visualization tool for logs stored in Elasticsearch. Helps create dashboards, graphs, and alerts for log monitoring.
+it runs on port no -> 5601
+
+
+#for that we need to setup in our system ELK we need to download 
+
+
+
+ELK installation -
+
+1.open Elastic Search ->COnfig -> elasticSearch.yml open and uncomment http.port=9200   //this file acts as a input file to our elk software
+
+2.now in bin ..-> open .bat file ->run as administrator.
+
+
+again go to yml file 
+
+add these lines at the end------------------
+
+cluster.name: my-cluster
+node.name: node-1
+network.host: 0.0.0.0
+http.port: 9200
+
+# Disable login/password
+xpack.security.enabled: false
+
+
+
+3.open kibana file ->cofig ->kibana yml -> uncomment the port
+
+4.bin-> run the batch file as n administrator.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ############################################
 ELK (Elasticsearch, Logstash, Kibana)
 ############################################
@@ -463,3 +568,6 @@ Steps to download logstash
 
 Step 1: https://www.elastic.co/downloads/logstash
 Step 2: Start the service - Run bin/logstash -f logstash.conf
+
+
+
