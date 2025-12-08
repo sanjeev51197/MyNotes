@@ -195,8 +195,21 @@ if give * * * * * so every one minute is there any change or modification in Git
 
 
 ==============================================================================================================================================
+##############################################3
+✅ Fix: Give Jenkins Permission to Use Docker
+Run these commands on your Ubuntu server (EC2):
+👉 Step 1: Add Jenkins to docker group
+sudo usermod -aG docker jenkins
+
+👉 Step 2: Restart Docker
+sudo systemctl restart docker
+
+👉 Step 3: Restart Jenkins
+sudo systemctl restart jenkins
 
 
+
+##############################
 http://13.204.64.224:8080/
 
 
@@ -333,33 +346,34 @@ First Integration----->
 
 pipeline {
     agent any
-         tools{
-             maven 'maven-3.9.9'
-         }
+
+    tools {
+        maven 'maven-3.9.11'
+    }
+
+
     stages {
         stage('git clone') {
             steps {
-                 git branch: 'main', url: 'https://github.com/sanjeev51197/my-docker-test.git'
+              git branch: 'main', url: 'https://github.com/sanjeev51197/myapp.git'
+
             }
-            
         }
-         stage('maven execute commands') {
+        stage('mvn build') {
             steps {
-                  sh 'mvn clean test package' 
+               sh 'mvn clean test package'
             }
-            
         }
-          stage('Docker image') {
+        stage('docker build') {
             steps {
-                  sh 'docker build -t sanjeev51197/mytest .' 
+               sh 'docker build -t sanjeev51197/mytest .'
             }
-            
         }
-          stage('deployment'){
-            steps{
-                sh 'docker stop mike'
-                sh 'docker rm mike'
-                sh 'docker run -d -p 9090:8080 --name mike sanjeev51197/mytest'
+         stage('deployment') {
+            steps {
+                 sh 'docker stop myapp || true'
+                 sh 'docker rm myapp || true'
+                 sh 'docker run -d -p 9090:8080 --name myapp sanjeev51197/mytest'
             }
         }
     }

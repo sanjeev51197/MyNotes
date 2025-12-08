@@ -281,7 +281,7 @@ do it once in API Gateway.👉 Saves time and makes system secure.
 3. Load Balancing -Gateway connects with Eureka and distributes traffic:
 Product Service (8081, 8082, 8083) -Gateway picks one instance automatically.  for👉 Better performance + fault tolerance.
 
-4. Hides Microservice Details  -lient does NOT need to know:  the ports of microservices.
+4. Hides Microservice Details  -Client does NOT need to know:  the ports of microservices.
 
 
 How to implement API Gateway
@@ -312,3 +312,5 @@ Service-to-service calls also pass JWT for internal protection.
 
 We use HTTPS for secure communication and apply validations to avoid bad input.
 This gives complete end-to-end security in a microservice architecture.”
+
+   

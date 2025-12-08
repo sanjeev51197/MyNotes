@@ -1,8 +1,14 @@
 Docker
+##########
 _____________
+1. What is Docker?
+#####################
+
+Docker is a containerization platform that allows you to package an application with all its dependencies into a lightweight, portable container so it runs consistently in any environment.
 
 -> Resolves Compatibility problem using containerization
 -> Docker will help us to install our software on different server without worrying about compatibility issue
+
 -> To deploy same application on multiple servers for load balancing we need not manually install technology stack (like Angular 18v, java 17V etc) manually one by one if docker is not used
 -> Software upgrades can be done easily on multiple machines using docker
 
@@ -11,7 +17,74 @@ Note:
 ✔ Containers don’t have their own kernel, they use the host’s kernel
 ✔ Docker Engine manages containers but does not create them—it runs & controls them
 
+2. What is a Docker Container?
+################################
 
+A Docker container is a running instance of a Docker image.
+It contains everything needed to run an application → code, runtime, libraries, config.
+
+Think: “A small, isolated environment where your app runs.”
+
+
+3. What is a Docker Image?
+###########################
+A Docker image is a read-only template used to create containers.
+It includes the OS layer + application + dependencies.
+
+Think: “Blueprint for containers.”
+
+
+4. What is Dockerfile?
+#####################
+A Dockerfile is a text file containing step-by-step instructions to build a Docker image.
+
+Example:
+FROM openjdk:17
+COPY app.jar /app.jar
+CMD ["java","-jar","app.jar"]
+
+
+
+5. What is Docker Engine?
+############################
+It is the core software responsible for running containers and managing images.
+
+It has: Docker Daemon ,REST API ,CLI
+
+
+6. What is Docker Hub?
+#########################
+A public registry where Docker images are stored and shared.
+
+
+
+7. What is a Docker Volume?
+###########################
+A volume is a persistent storage mechanism for containers.
+Even if a container is deleted, data inside the volume remains.
+
+8. What is a Docker Network?
+#############################
+ It is A feature that allows containers to communicate with each other securely.
+
+Types:
+bridge (default)
+host
+
+9. What is Docker Compose?
+##########################
+
+It is A tool used to run multi-container applications using a docker-compose.yml file. ex -MySQL container ,SpringBoot container 
+
+
+10. What is Docker Registry?
+##############################
+It is A storage location where Docker images are kept (private or public).ex -Dockerhub
+
+11. What is Build vs Run in Docker?
+###################################
+Build: Creates an image using Dockerfile → docker build
+Run: Creates a container from image → docker run
 
 Note:
 
@@ -35,8 +108,10 @@ Docker Image: Application Package with dependencies of it
 Docker Registry: Its a hub to store docker images
 Docker Container: Isolated environment to run docker image
 
-What is containerization?
 
+
+What is containerization?
+#########################
 containers package an application along with its dependencies (libraries, configuration files, etc.), ensuring that it runs consistently across different computing environments.
 
 #########################          #########################                  ####################                 @@@@@@@@@@@@@@@@@
@@ -71,9 +146,9 @@ sudo apt update
 curl -fsSL get.docker.com | /bin/bash
 sudo usermod -aG docker ubuntu 
 exit
-Verify docker installation
 
-Use this command to check version of docker installed
+
+Verify docker installation .Use this command to check version of docker installed
 _____________________________________________________
 docker -v
 
