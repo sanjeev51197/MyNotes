@@ -27,13 +27,17 @@ Note:
 -> Eureka server runs by default on port 8761.
 -> If you run eureka server on port 8761. Client (micro services will automatically register with eureka server)
 
+
 What is Eureka Server?
 #######################
 Eureka Server is a service registry in Spring Cloud used for service discovery. .It maintains a list of all microservices and their network locations (IP + port). In main application we annotate @EnableEurekaServer .
 When a service starts, it registers itself with the Eureka Server. Other services can look up services from Eureka to communicate with them.
+
+
 What is Eureka Client?
 #######################
 Eureka Client is a microservice that registers itself with Eureka Server and can also discover other services. Each microservice (like User Service, Order Service) acts as a Eureka Client.   we use  @EnableEurekaClient in main application to register with eureka discovery.
+
 
 On startup, it sends a heartbeat to the Eureka Server to stay registered.
 It can query Eureka to find the address of other services.
@@ -292,7 +296,7 @@ Step 2 — Add Gateway dependencies (These allow the gateway to talk to Eureka &
 
          spring-cloud-starter-gateway
 
-         spring-cloud-starter-netflix-eureka-client
+         spring-cloud-starter-Netflix-eureka-client
 
 Step 3 — Register Gateway with Eureka (@EnableDiscoveryClient)
 
@@ -311,6 +315,143 @@ Microservices use Spring Security for authorization and role-based access.
 Service-to-service calls also pass JWT for internal protection.
 
 We use HTTPS for secure communication and apply validations to avoid bad input.
-This gives complete end-to-end security in a microservice architecture.”
+This gives complete end-to-end security in a microservice architecture."
 
-   
+
+
+
+
+what do you mean by Fault Tolerance?
+#####################################
+Fault tolerance means the system continues operating even when components fail, by using retries, fallbacks, redundancy, and circuit breakers to avoid full system failure.” 
+
+
+What is a Fallback Method?
+############################
+A fallback method is a backup method that is executed when the main method fails.
+It prevents the system from crashing and gives a graceful response instead of an error.
+
+✅ How a Fallback Method Works (Step-by-step)
+##################################################
+Your service calls another microservice (example: Inventory Service).
+If the downstream service: is down ,responds with error ,takes too long (timeout) ,or circuit breaker opens ,👉 The main method fails.
+Instead of throwing an exception, the system automatically calls the fallback method.
+
+The fallback method returns: cached data ,default response ,friendly message ,empty object ,static fallback value ,Your service continues working without breaking the entire flow.
+
+
+✅ Why Fallback is Important
+############################## 
+1️⃣ Prevents cascading failures -If one microservice fails, the fallback stops the failure from spreading to other services.
+
+2️⃣ Improves user experience -Even if the backend fails, users still receive a meaningful response instead of an error.
+
+3️⃣ Maintains system availability -Fallback helps the system stay up and running rather than becoming unavailable.
+
+4️⃣ Supports resilience & fault tolerance -It helps the system survive failures without downtime.
+
+5️⃣ Handles timeouts & slow responses -If a service is too slow, fallback avoids waiting too long and returns a quick backup response.
+
+6️⃣ Critical for distributed systems -In microservices, many services depend on each other. Fallback ensures that one failure does not break everything
+
+
+✅ What is Resilience4j?
+#########################
+Resilliance4j is a lightweight java library which is used for handling faults inside your microservices architecture .
+
+suppose we have service A and service B inside my microservice Architecture .Service A is repeatedly calling Service B . now if Service B is down and the call from service A to service B is failing .but still repeatedly service A is calling service B . 
+
+in order to prevent that we make use of Resilliance4j library . Resillilance4j provides different pattern for ex - Circuit Breaker, Retry ,Rate Limiter 
+it acts a switch between the services to prevent from repeated calls .  it works well with SpringBoot .
+
+🔧 Main Components -
+
+1️⃣ Circuit Breaker  -Stops calling a failing service.
+
+2️⃣ Retry -Retries failed calls before fallback.
+
+3️⃣ Rate Limiter -Limits how many requests can be sent.
+
+4️⃣ Bulkhead -Isolates resources (like threads) to avoid full crash.
+
+5️⃣ TimeLimiter -Sets timeout for slow services.
+
+6️⃣ Fallback -Returns default/cached response when failure happens.
+
+
+✅ Circuit Breaker – Simple Definition
+########################################
+A circuit breaker is a pattern that stops calling a failing service to prevent the system from crashing and allows it to recover.
+It protects the system from cascading failures, and uses fallback until the service recovers.”
+
+
+How it works -
+Circuit Breaker has three state Closed, Open ,Half-Open    .      suppose  there is Service A and Service B 
+######################################################
+Closed - when we say circuit are closed that means request are flowing properly across services.
+
+now suppose service B is down and there is some error limit exceeded then it will go to Open State that means request are not flowing anymore .
+ now after certain amount of time it will go half open state in order to check the particular service is up or not. it will repeatedly giving health check request to Service B .if the service B is Up then it will go to closed state again.and if it not up then it will go to again Open State.
+
+| State         | Meaning                            |
+| ------------- | ---------------------------------- |
+| **Closed**    | Everything OK → calls allowed      |
+| **Open**      | Service is failing → calls blocked |
+| **Half-Open** | Test few calls to check recovery   |
+
+
+
+
+What is RateLimiter in Resilience4j?
+####################################
+
+A RateLimiter in Resilience4j is used to restrict the number of calls allowed within a given time interval. It prevents systems from being overloaded by too many requests and helps maintain stability under heavy traffic.”
+
+we need to add Resiiliance4j dependency after that give @RateLimiter annotation  ,you can give any specific name and we ll give a fallback method
+in application.pro we ll configure like limitForPeriod that means max no of period that you can call . within specific amount of time (limitRefreshPeriod)
+application.properties-
+resilience4j.ratelimiter.instances.inventoryService.limitRefreshPeriod=1s
+resilience4j.ratelimiter.instances.inventoryService.limitForPeriod=10
+resilience4j.ratelimiter.instances.inventoryService.timeoutDuration=0
+
+ RETRY
+########
+
+If a service call fails (ex: "appointment-service" returns 500), retry again: 
+Example: Retry 3 times ,2 seconds interval
+Good for temporary network issues.
+⚠️ But don’t retry very long if service is DOWN → use Circuit Breaker + Retry together.
+
+How do you apply in your DoctorAppointmentBooking App
+#######################################################
+“In my doctor appointment system, I use RateLimiter at the API Gateway and booking endpoint to prevent abuse. Circuit Breaker is applied when Booking Service calls Doctor, Patient, or Payment services to avoid cascading failures. Retry is used for temporary issues like notification and payment. Timeout is set on all external calls, and fallback provides user-friendly messages when services are unavailable.”
+
+“In my Booking-Service, I used Resilience4j to make the system fault-tolerant.
+I added CircuitBreaker and TimeLimiter when calling Doctor-Service, Retry and Bulkhead when calling Payment-Service, and a RateLimiter when calling Notification-Service to avoid overloading email/SMS microservices. This ensures Booking-Service stays stable even if dependent services fail.”
+
+
+
+⭐ Saga Pattern (Very Easy Line)
+##################################
+Saga Pattern means doing a big task in small steps, and if any step fails, we undo the previous steps to keep data correct.
+🎯 Example (Doctor Appointment) — Super Easy
+
+🏥 Real-world Saga Example (Doctor Appointment)
+Normal Flow: ->
+Block Slot
+Create Appointment
+Make Payment
+Send Confirmation
+
+Failure Flow: ->
+
+Payment failed → Saga triggers
+
+Unblock slot
+Cancel appointment
+Send failure message
+Your system becomes consistent, clean, and reliable.
+
+How did you implement saga in your project?
+############################################
+“I implemented the Saga Pattern in my project using the Orchestration approach. I created a dedicated Saga Orchestrator Service that controlled the entire booking workflow. Each microservice (Slot-Service, Booking-Service, Payment-Service, Notification-Service) performed its own local transaction, and whenever a step failed, the orchestrator triggered compensating actions like releasing the slot or canceling the booking. This helped us maintain consistency across services without using distributed transactions.”

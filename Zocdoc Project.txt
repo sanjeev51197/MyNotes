@@ -1,0 +1,132 @@
+📌 1. Explain Your ZocDoc Appointment Booking Project
+
+Answer:
+
+“My project is  ZocDoc which is a online doctor appointment booking system which is built using a microservices architecture.
+We designed independent services like Doctor Service, Patient Service, Booking Service, Payment Service, and Notification Service.
+We used Eureka Discovery Server for service registry, Spring Cloud API Gateway for routing, and Feign Client for internal service communication.
+
+For media storage like doctor profile photos and medical reports, I integrated AWS S3.
+To improve performance, I used Redis caching for frequently accessed data like doctor list, availability, and patient profiles.
+Payment processing is integrated using Stripe API.
+
+Asynchronous communication like sending SMS/Email notifications happens using Kafka.
+All services use MySQL, containerized with Docker, orchestrated using Kubernetes, and deployed through a Jenkins CI/CD pipeline.
+Unit testing was done using JUnit + Mockito.”
+
+
+📌 2. Why did you use Microservices instead of Monolith?
+Answer:
+
+1.Each module (doctor, booking, payment) is isolated and independently deployable.
+2.Teams can work in parallel.
+3.Fault in one service doesn’t affect others.
+4.Scaling becomes easier—e.g., Booking Service can scale based on traffic.
+5.Technology stack flexibility.
+
+📌 3. Explain your Microservices communication mechanism
+answer:In my microservices architecture, I implemented both synchronous and asynchronous communication based on the use-case. For synchronous calls, I used REST communication through Feign Client, mainly when real-time responses were required. For example, the Booking Service communicates with the Doctor Service to check doctor availability, with the Patient Service to validate patient details, and with the Payment Service to initiate payments. These interactions require immediate responses, so Feign Client provided a clean, declarative way to call other services through Eureka Service Discovery. For asynchronous communication, I used Kafka to publish domain events such as Booking Confirmation and Payment Success. These events are consumed by the Notification Service, which then triggers email/SMS notifications without affecting the main request flow. This event-driven approach improves system decoupling, scalability, and ensures that user-facing operations remain fast and reliable.
+
+
+📌 4. Why did you use Eureka Discovery Server?
+Answer:
+I used Eureka Discovery Server to manage service registration and discovery in my microservices architecture. It keeps a dynamic registry of all running services, so each service can register itself automatically at startup. If any service instance goes down, Eureka detects it and removes it from the registry, which improves resilience and avoids failed calls. Eureka also works seamlessly with Feign Client, allowing me to make load-balanced, service-to-service calls using service names instead of hard-coding URLs. This makes the system more scalable, fault-tolerant, and easier to maintain.
+
+📌 5. What is the role of API Gateway in your system?
+ans:
+In my system, the API Gateway acts as the single entry point for all client requests. It handles essential responsibilities such as routing requests to the appropriate microservices, applying load balancing, and performing JWT validation for security. The gateway also manages circuit breaking and rate limiting to protect services from overload. Additionally, it provides centralized logging and hides all internal microservice URLs, which simplifies client communication and improves overall security and maintainability.
+
+📌 6. Why did you use Feign Client instead of RestTemplate?
+Answer:
+I used Feign Client instead of RestTemplate because it provides a much cleaner and more declarative way to make service-to-service calls using the @FeignClient annotation. Feign integrates directly with Eureka, enabling client-side load balancing and allowing me to call services using their names instead of hard-coded URLs. It also offers useful features like built-in retries and error decoding, which improve reliability. Overall, Feign reduces a lot of boilerplate code and makes the communication between microservices more maintainable and efficient.
+
+📌 7. Explain your Booking Flow in detail 
+
+The booking flow in my ZocDoc appointment system follows a complete end-to-end microservices pattern. 
+When a patient searches for a doctor, the request first goes through the API Gateway and reaches the Doctor Service, where Redis caching is used to return faster results; if the data isn’t available in cache, it is fetched from MySQL and stored for future requests. Once the patient selects a doctor, date, and time slot, the Booking Service validates the slot by calling the Doctor Service through Feign Client to ensure the doctor is available and the slot is not already booked. If available, the Booking Service creates the booking in MySQL with a status of PENDING_PAYMENT. Next, the Booking Service communicates with the Payment Service, which generates a Stripe PaymentIntent and returns a secure payment URL for the patient. After payment is completed, Stripe sends a webhook callback to the Payment Service, which updates the payment status to SUCCESS, marks the booking as CONFIRMED, and publishes a payment.success event to Kafka. The Notification Service listens to this event and sends confirmation emails/SMS to both the patient and the doctor. Meanwhile, the Doctor Service updates its schedule by marking the slot as booked and updating the Redis cache to prevent double-booking. Finally, the patient can view their confirmed appointment, along with doctor and payment details, on their dashboard.
+
+📌 8. How did you integrate Stripe Payment?
+ans:
+I integrated Stripe inside the Payment Service to securely handle appointment payments. When the Booking Service requests a payment, the Payment Service creates a Stripe Checkout Session with the amount, currency, patient email, and success/cancel URLs, and returns the payment URL to the frontend. The patient is then redirected to Stripe’s secure, PCI-compliant hosted page, ensuring no card details touch our servers. After payment, Stripe redirects to the success URL with the sessionId and bookingId. In the success handler, I retrieve the Stripe session, verify that the payment status is paid, and then use Feign Client to update the booking status to CONFIRMED in the Booking Service. If payment is cancelled, the booking remains PENDING_PAYMENT or moves to FAILED. Once payment is successful, the Payment Service publishes a payment.success Kafka event, which is consumed by the Notification Service to send confirmation messages. I chose Stripe because it is secure, easy to integrate, supports multiple payment methods, and provides reliable webhooks for real-time updates.
+
+
+📌 9. Why did you use Redis? What data did you cache?
+ans:
+I used Redis mainly to improve performance and reduce load on MySQL. Since certain data like doctor lists, specialties, available time slots, and patient profiles are frequently accessed, I cached them in Redis to avoid repeated database queries. This made the system much faster, especially during high traffic, because Redis provides in-memory lookups that are nearly five times quicker than hitting the database each time. Overall, Redis helped optimize responsiveness and ensured smoother user experience across the application
+
+
+How did you store images in AWS S3?
+ans:
+I used AWS S3 to store all media files such as doctor profile photos, patient documents, and medical reports. When a file is uploaded from the frontend, the request goes through the API Gateway and reaches the respective service (Doctor or Patient Service). Inside the service, the multipart file is converted into an S3 upload object using metadata like content type and size. Then, using the AWS SDK, I upload the file to the S3 bucket with a unique file name (UUID) and set the ACL to PublicRead so the frontend can access it. After the upload, I retrieve the public S3 URL and store it in MySQL as part of the doctor or patient record. This approach keeps files outside the application server, reduces storage load, offers unlimited scalability, and provides fast, reliable retrieval with high availability.
+
+
+📌 11. What database design did you use?
+ans:
+I used MySQL with a properly normalized relational schema to maintain clean relationships between entities and avoid data redundancy. The main tables include a doctor table storing doctor details such as name, specialization, and profile picture URL; a patient table for patient information like name and email; a booking table that maps patients to doctors with fields like date, slot, and status; and a payment table linked to each booking with amount, status, and transaction details. This structured design ensures data integrity, efficient joins, and easy retrieval for analytics or reporting.
+
+📌 12. How does Kafka Notification Service work?
+ans:
+In my project, I implemented a Kafka-based Notification Service to handle all emails, SMS alerts, booking confirmations, reminders, and payment receipts in an asynchronous and decoupled way. The system follows an event-driven architecture where the Booking Service publishes events such as booking.created, booking.rescheduled, and booking.cancelled, while the Payment Service publishes events like payment.success or payment.failed. These events are sent to dedicated Kafka topics such as booking-events and payment-events. The Notification Service acts as a consumer using @KafkaListener to subscribe to these topics, and whenever an event arrives, Kafka pushes it to the service in real time. Based on the event type, the Notification Service triggers the appropriate message—booking confirmation, payment receipt, appointment reminder, or cancellation alert. Using Kafka provides major benefits: loose coupling (services don’t call each other directly), fault tolerance (events remain in Kafka if the Notification Service is down), easy scalability using consumer groups, and high throughput suitable for healthcare systems. This is far more reliable than REST-based notifications and ensures smooth, event-driven communication across the platform..
+
+
+📌 13. How did you ensure Security?
+ans:
+I ensured security in my system using multiple layers. I implemented JWT authentication for user login and role-based access control so only authorized users can perform certain actions. The API Gateway validates tokens, applies rate limiting, and blocks unauthorized requests. All communication between services happens over HTTPS/TLS, and internal calls use Eureka + token relay to prevent fake services. Sensitive data like passwords is encrypted using BCrypt, and medical files in S3 are validated and securely stored. I also added input validation to prevent SQL injection, XSS, and malicious file uploads. Overall, the architecture is protected at API, service, and data levels.
+
+
+📌 14. CI/CD Pipeline (Jenkins)  ?
+
+ans:  I set up a CI/CD pipeline using Jenkins to automate the entire build and deployment process. Whenever code is pushed to GitHub, it automatically triggers a Jenkins job. The pipeline runs unit tests using JUnit and Mockito, then builds a Docker image for the microservice and pushes it to DockerHub. Finally, Jenkins deploys the updated image to the Kubernetes cluster, ensuring smooth, reliable, and zero-downtime deployments.
+
+📌 15. How did you containerize and deploy using Kubernetes?
+ans:
+I containerized each microservice using Docker by creating a separate Dockerfile and building/pushing the images to DockerHub. Then I deployed all services—Doctor, Patient, Booking, Payment, Notification, API Gateway, and Eureka—on Kubernetes using Deployment and Service YAMLs. Each service runs multiple replicas for high availability, and internal communication uses ClusterIP. The API Gateway is exposed using NodePort so external clients can access the system, while all services register with Eureka for discovery. I used ConfigMaps and Secrets to manage environment variables and sensitive data, and deployed Kafka and MySQL inside the cluster for messaging and data storage. Finally, I automated deployments using CI/CD, where each code push triggers building the Docker image, pushing it to DockerHub, and updating the Kubernetes deployment for a smooth, zero-downtime rollout.
+
+
+📌 16. How did you implement Fault Tolerance? (Using Resilience4j) ?
+ans:
+I implemented fault tolerance in my microservices using Resilience4j to ensure the system stays stable even when a dependent service is slow or down. I applied Circuit Breaker, Retry, TimeLimiter, RateLimiter, and Fallback methods mainly on Feign client calls in the Booking and Payment Services. Circuit Breaker prevents cascading failures by stopping calls to an unhealthy service and returning a fallback response. Retry automatically re-attempts failed calls for temporary issues, and TimeLimiter ensures requests don’t hang too long. RateLimiter controls traffic spikes, and fallback methods provide a graceful alternative response when everything else fails. This setup keeps the application responsive, avoids chain failures, and improves overall resilience.
+
+📌 17. What unit tests did you write?
+
+I wrote unit tests using JUnit + Mockito mainly for service-level business logic.
+I mocked external dependencies like Feign Clients, Redis, MySQL Repository, Stripe, Kafka, and S3 to avoid real calls.
+I tested core flows such as doctor availability, booking logic, payment flow, caching, and file upload.
+I also used @DataJpaTest for repository queries and MockMvc for controller endpoint testing.
+Overall, my tests covered validations, service interactions, and complete booking workflow correctness.
+
+📌 18. Biggest challenge you solved in this project?
+ans:
+The biggest challenge was preventing double-booking of the same time slot.
+Multiple users were trying to book the same doctor slot at the same time.
+To solve this, I implemented:
+Database unique constraint on (doctorId, date, slot)
+Redis distributed lock to handle concurrency
+Atomic booking logic with proper transaction isolation
+This ensured only one booking is created, even under high traffic.
+
+
+📌 19. What future enhancements do you propose?
+In the future, I would add features like doctor video consultation, digital prescription management, and multi-tenant clinic support for large hospital groups. I would also integrate an AI-based doctor recommendation system to improve patient experience by suggesting the best doctors based on symptoms, reviews, and availability.
+
+
+
+📌 20. Why is your project production-ready?
+ans:
+My project is production-ready because it follows microservices architecture, supports CI/CD automation, and is deployed on Kubernetes for scalability. It uses Redis caching for performance, Kafka message queues for reliability, and Stripe payment integration for secure transactions. I also implemented fault tolerance (Resilience4j) and strong security with JWT, role-based access, and SSL, making it stable, secure, and ready for real-world use.
+
+
+How your Payment-service works?
+ans-
+Booking Service calls Payment Service, which creates a Stripe PaymentIntent.
+Stripe returns: payment URL and paymentIntentId
+The patient is redirected to Stripe to complete payment securely.
+
+“When a patient completes the Stripe checkout, Stripe redirects to my /success endpoint with session_id and bookingId.
+Inside /success, I retrieve the Stripe session using the session ID and check if the payment status is ‘paid’.
+
+If payment is successful, I call Booking Service using a Feign client and update the booking status to CONFIRMED.
+If payment fails or is cancelled, the system returns the appropriate message and the booking remains in PENDING state.
+
+This ensures the booking is confirmed only after the Stripe payment is truly successful.”
+
