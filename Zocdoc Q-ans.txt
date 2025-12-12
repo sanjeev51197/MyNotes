@@ -1,0 +1,139 @@
+Why did you use separate services instead of a monolith?
+
+ans: I used separate microservices because each part of the system has different requirements. Doctor Service is read-heavy and needs caching, Payment Service needs high security, Booking Service needs strict availability checks, and Notification Service works asynchronously. If everything was in one monolith, scaling and updating would become difficult. Microservices make the system easier to maintain, deploy, and scale independently.
+
+How do your microservices communicate? Why Feign Client?
+
+ans: My microservices communicate with each other using Feign Client registered through Eureka. Feign makes service calls very easy because I only write an interface instead of manual REST code. It also supports built-in load balancing and works smoothly with Resilience4j for retries and circuit breakers. This keeps communication clean, reliable, and maintainable.
+
+
+How does your API Gateway route requests?
+
+Answer: My API Gateway uses Spring Cloud Gateway to route incoming client requests to the correct microservice based on URL paths. I also added a global pre-filter to validate JWT tokens before allowing the request to pass through. The gateway handles logging and can apply circuit breakers if needed. Using lb://SERVICE-NAME ensures requests are load-balanced through Eureka.
+
+How did you handle distributed logging?
+
+answer: I implemented distributed logging using Logback along with a unique Correlation ID for every request. Each microservice logs the trace ID, service name, and timestamp so the entire flow can be tracked across services. In Kubernetes, pod-level logs helped identify failures quickly. This made it easy to trace complete flows like booking → payment → notification.
+
+Why did you keep Booking Service separate from Doctor Service?
+
+ans:I kept the Booking Service separate because booking involves complex workflows like payments, availability locking, and Kafka notifications. Doctor Service only handles doctor profiles, so mixing both would make the system tightly coupled and harder to scale. During peak hours, booking traffic is very high, so having it separate ensures better performance and independent deployment. This keeps the architecture clean and maintainable.
+
+
+How do you manage configuration for your services?
+
+ans:I manage configuration using Kubernetes ConfigMaps for normal environment variables and Secrets for sensitive data like Stripe keys, DB passwords, and AWS credentials. Each microservice reads these values at startup through Spring Boot using @Value or @ConfigurationProperties. This avoids hard-coding and allows updating configurations without rebuilding the application. It keeps the system secure, flexible, and production-ready.
+
+
+Why did you choose MySQL?
+
+ans: I chose MySQL because the application is highly transactional, and MySQL provides strong ACID compliance for safe and consistent bookings. It supports a well-structured relational schema, works seamlessly with Spring Data JPA, and can scale easily using read replicas for high-traffic operations like doctor searches.
+
+
+
+How did you optimize database queries?
+
+ans :I optimized database performance by adding indexes on frequently searched fields like doctor_id and slot_time. I used pagination for large doctor lists and JPA projections to return only required fields. For repeated lookups, I also denormalized small pieces of data to reduce joins and improve query speed.
+
+
+What did you store in Redis Cache and why?
+
+ans: I used Redis to cache frequently accessed data like doctor list, doctor profiles, search results, and time slot availability. This reduced repeated database hits and significantly improved response time and overall system performance.
+
+
+How did you handle cache invalidation?
+
+Answer:I handled cache invalidation by deleting the old Redis keys whenever a doctor updated their profile or schedule. After deletion, the system automatically regenerated fresh data and stored it back in Redis.       
+
+Remove old cache using redisTemplate.delete(key) 
+
+
+Did you use Redis as distributed lock for double booking?
+
+ans : Yes, I used Redis as a distributed lock to prevent double booking. I applied SETNX on the doctor’s time slot—if the lock exists, the request is rejected; if it’s free, the booking proceeds. Additionally, I enforced a unique constraint on (doctorId, slotTime) in the database for extra safety.
+  
+  
+What happens if Doctor Service is down during booking?
+
+ans :If the Doctor Service is down during booking, Resilience4j ensures stability. The circuit breaker opens, retry attempts are made, and if all fail, a fallback response is returned. This prevents the Booking Service from crashing and provides the user with a graceful message.
+
+
+How do you detect microservice failures?
+
+ans:I detect microservice failures using multiple mechanisms: Eureka heartbeats to monitor service registration, Spring Boot Actuator /health endpoints for service status, Kubernetes liveness and readiness probes to check pod health, and logging alerts to notify of any issues.
+
+
+What patterns did you use for inter-service calls?
+
+ans :For inter-service calls, I used patterns like Circuit Breaker to prevent cascading failures, Retry for temporary issues, TimeLimiter to avoid long waits, RateLimiter to control traffic spikes, and Feign Client with load balancing for reliable service-to-service communication.
+
+
+
+How does authentication work?
+
+ans :Authentication works using JWT tokens. When a user logs in, the Login API generates a JWT, which is sent with every request. The API Gateway validates the token and forwards user details to backend services. No service processes requests without a valid JWT, ensuring secure access.
+
+
+How do you secure communication between services?
+
+ans:I secure communication between services by keeping them inside the Kubernetes ClusterIP network, so they are not publicly accessible. All requests go through the API Gateway, where JWT tokens are validated. This ensures that no service accepts unauthorized or external requests directly.
+
+
+How do you secure S3 uploads?
+
+I secure S3 uploads by allowing server-side uploads only and using IAM policies with strict access control. Public write access is disabled, and every file is stored with a unique UUID to prevent collisions or unauthorized access.
+
+
+Why Kafka instead of direct API call?
+
+ans: I used Kafka instead of direct API calls because notifications are asynchronous and should not block the booking flow. Kafka provides decoupling, reliability, automatic retries, and can handle high-volume events efficiently.
+
+
+What Kafka topics did you design?
+
+ans: I designed Kafka topics like booking-confirmed for new appointments and payment-success for completed payments. These topics allow services like Notification Service to consume events asynchronously and act accordingly.
+
+
+How do you ensure Kafka reliability?
+
+ans: I ensure Kafka reliability by setting acknowledgment level to “all”, enabling retries, using consumer groups for scalability, and implementing idempotent consumer logic so that events are processed safely even if delivered multiple times.
+
+
+What happens if Notification Service is down?
+
+If the Notification Service is down, the system continues to work normally. Kafka stores all events until the service comes back online, ensuring no notifications are lost.
+
+
+How do you upload images to S3?
+
+ans: To upload images to S3, I convert the Multipart file, set its metadata, and upload it using the AWS SDK. After upload, I retrieve the public URL and save it in MySQL so the frontend can access the image.
+
+
+How do you ensure file naming uniqueness?
+
+ans: I ensure file name uniqueness by appending UUID.randomUUID() to the original file extension. This guarantees that every file has a unique name and prevents any overwrites.
+
+
+How do you restrict unauthorized access to S3?
+ans: I restrict unauthorized access to S3 using IAM roles and bucket policies. Public ACLs are disabled, and only the backend server is allowed to upload or access files, ensuring secure storage.
+
+
+Why did you choose Stripe?
+I chose Stripe because it is easy to integrate, provides a secure payment system, supports webhooks for real-time updates, offers a built-in UI, and handles session-based payments smoothly.
+
+
+How did you handle Stripe success callback?
+
+ans: At /payment/success, I retrieve the session_id, verify the payment status, and update the booking from PENDING to CONFIRMED. Then I publish a Kafka event and trigger notifications to the patient and doctor.
+
+
+How do you handle payment failure or cancellation?
+
+ans: If payment fails or is cancelled, the booking stays in PENDING status. No confirmation is sent, and the patient receives a message saying “Payment Cancelled.”
+
+
+How did you deploy your application on Kubernetes?
+
+ans: I deployed the application on Kubernetes by creating Docker images for each microservice and defining Deployment and Service YAMLs. The API Gateway is exposed via NodePort, and ConfigMaps and Secrets are mounted for configuration. MySQL runs as a StatefulSet, Kafka is installed using Helm, and the entire deployment is automated with GitHub Actions.
+
+

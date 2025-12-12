@@ -1,3 +1,52 @@
+Hi, I’m Sanjeev Kumar, a Java Spring Boot developer with 3.5 years of experience in designing and developing scalable microservices applications. I have hands-on experience with Spring Boot, Hibernate, REST APIs, Microservices architecture, Redis caching, Kafka messaging, MySQL, AWS S3, and Stripe payment integration.
+
+I have built production-ready healthcare projects, including a doctor appointment booking system where I implemented end-to-end flows like doctor search, slot booking, payment processing, notifications, and fault-tolerant communication using Resilience4j. I also have experience with CI/CD pipelines (Jenkins/GitHub Actions), Docker, and Kubernetes deployments.
+
+I focus on writing clean, maintainable code, optimizing performance, and ensuring security and scalability in every project. I enjoy solving real-world problems and delivering solutions that improve user experience and business efficiency.
+
+
+
+DOMAIN RELATED
+##############
+
+“What was your domain?
+
+Option 1 – Simple & Clear
+
+"My domain was Healthcare Technology, specifically backend development for an online doctor appointment booking system."
+
+Option 2 – Technology-Focused
+
+"I worked in the Healthcare domain, building a microservices-based appointment booking system with Spring Boot, Redis, Kafka, AWS S3, Stripe payments, and Kubernetes deployment."
+
+Option 3 – Role + Domain
+
+"My domain was Healthcare IT, and I focused on backend services for a Zocdoc-like system handling doctor/patient management, bookings, payments, and notifications.
+
+Why did you choose this domain for your project?
+
+ans: I chose this domain because healthcare is critical and widely used, and there is a clear need to digitize appointment booking. Manual booking systems are slow, prone to errors, and inconvenient for both patients and doctors.
+
+3. How does your system solve problems in the healthcare domain?
+
+ans :My system solves problems by allowing patients to search for doctors, check real-time availability, book appointments online, make secure payments, and get notifications. It also helps doctors manage schedules efficiently, avoiding overlaps and double bookings.
+
+
+What is the key business value of your application?
+
+ans: The key business value is efficiency, scalability, and reliability. It saves time for patients and doctors, reduces errors in scheduling, supports high traffic with microservices architecture, and provides a secure, automated workflow from search to payment.
+
+
+How is your system better than traditional manual appointment booking?
+
+ans : Compared to manual booking, my system offers real-time availability, online payments, automated notifications, and secure record-keeping. It eliminates phone calls, reduces missed appointments, avoids double-booking, and provides a centralized platform for doctors and patients, improving overall healthcare service quality.
+
+
+What was the biggest challenge you faced and how did you solve it?
+ans : The biggest challenge was preventing double-booking when multiple patients tried the same slot. I solved it using a Redis distributed lock, a DB unique constraint, and transactional booking logic. This ensured consistency and reliable bookings under high traffic.
+
+PROJECT RELATED
+#####################
 📌 1. Explain Your ZocDoc Appointment Booking Project
 
 Answer:
@@ -115,6 +164,83 @@ In the future, I would add features like doctor video consultation, digital pres
 ans:
 My project is production-ready because it follows microservices architecture, supports CI/CD automation, and is deployed on Kubernetes for scalability. It uses Redis caching for performance, Kafka message queues for reliability, and Stripe payment integration for secure transactions. I also implemented fault tolerance (Resilience4j) and strong security with JWT, role-based access, and SSL, making it stable, secure, and ready for real-world use.
 
+
+How do you handle doctor search and availability in your system?
+
+ans: "I implemented doctor search with real-time slot filtering. The system only returns future time slots for today and all slots for upcoming days, ensuring patients always see accurate availability before booking."
+
+
+
+What unit tests did you write using JUnit and Mockito?
+
+I wrote unit tests for all service-level business logic using JUnit and Mockito.
+
+Booking Service: validate doctor availability, mock Feign client calls, check booking creation, and payment status updates.
+
+Doctor Service: test profile creation, updates, Redis caching logic, and S3 file URL handling.
+
+Patient Service: test registration, medical report upload (mock S3), and profile retrieval.
+
+Payment Service: mock Stripe session creation, payment callbacks, and booking confirmation via Feign client.
+
+Notification Service: test Kafka consumers and mocked email/SMS notifications.
+
+
+How did you test services interacting with external APIs or Kafka?
+
+answer: I mocked Feign client calls for service-to-service communication.
+I mocked Stripe SDK to simulate payment session creation and callbacks.
+For Kafka, I mocked producer/consumer behavior to ensure events were published and consumed correctly without relying on a real Kafka broker.
+
+How do you ensure booking/payment flows are correctly tested?
+
+answer :I tested the entire booking flow: doctor selection → slot validation → booking creation → payment processing → Kafka event → notification.
+
+Used Mockito to simulate external dependencies and assertions to validate the status transitions.
+
+Verified edge cases like double-booking prevention and payment failures.
+
+
+
+ Did you write integration or end-to-end tests?
+
+answer : Yes, I wrote controller-level tests using MockMvc to verify API endpoints, request/response structure, and interaction with service layers.
+
+Repository methods were tested using @DataJpaTest to validate queries.
+
+End-to-end flow was partially tested by combining mocked services and controllers to ensure realistic booking scenarios worked as expected.
+
+
+
+1️⃣ How do you handle sensitive patient data?
+
+ans :All sensitive patient data such as personal details, medical reports, and payment info is encrypted or hashed before storage. Passwords are hashed using BCrypt, and sensitive payment information never touches our servers.
+
+2️⃣ How do you comply with healthcare regulations like HIPAA/GDPR?
+
+ans :We follow data privacy and security best practices:
+
+Encrypt data in transit (HTTPS/TLS) and at rest.
+Implement access control and role-based permissions (RBAC).
+Maintain audit logs for sensitive operations.
+Limit data exposure to only authorized users, complying with HIPAA/GDPR principles.
+
+3️⃣ How do you handle medical reports uploaded by patients?
+
+Reports are uploaded via backend APIs only. The files are validated for type and size (PDF, JPG, PNG) before upload. Stored in AWS S3 using private buckets with unique UUID filenames.
+
+4️⃣ How do you store and secure files like prescriptions and reports?
+
+Use AWS S3 with IAM roles and bucket policies. Public write access is disabled; files are accessed only via pre-signed URLs.
+Backend handles upload/download and only authorized users can access the files.
+
+5️⃣ What measures did you take to prevent unauthorized access to patient/doctor data?
+
+JWT authentication for all API requests.
+Role-based access control (RBAC) to enforce permissions.
+API Gateway validates tokens and blocks unauthorized requests.
+Services are only accessible internally in Kubernetes ClusterIP; no public access.
+Sensitive endpoints are monitored and logged for auditing.
 
 How your Payment-service works?
 ans-
