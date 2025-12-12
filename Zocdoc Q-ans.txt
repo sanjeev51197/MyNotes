@@ -51,8 +51,25 @@ Remove old cache using redisTemplate.delete(key)
 Did you use Redis as distributed lock for double booking?
 
 ans : Yes, I used Redis as a distributed lock to prevent double booking. I applied SETNX on the doctor’s time slot—if the lock exists, the request is rejected; if it’s free, the booking proceeds. Additionally, I enforced a unique constraint on (doctorId, slotTime) in the database for extra safety.
+
+
+how did you implement redis in your project?
+
+ANS :I implemented Redis to optimize performance and reduce database load in my ZocDoc-style appointment system. Redis caches frequently accessed data such as:
+Doctor list by specialization and area
+Available time slots for each doctor
+Search results to handle peak traffic efficiently
+
+Implementation:
+
+Added Spring Boot Redis starter and connected via application.yml.
+Used RedisTemplate or @Cacheable annotations in service layer to store search results with a TTL (e.g., 10 minutes).
+
+Cache Invalidation:
+When a doctor updates their profile or schedule, the cache is refreshed using @CacheEvict, ensuring patients always see up-to-date availability.
   
   
+
 What happens if Doctor Service is down during booking?
 
 ans :If the Doctor Service is down during booking, Resilience4j ensures stability. The circuit breaker opens, retry attempts are made, and if all fail, a fallback response is returned. This prevents the Booking Service from crashing and provides the user with a graceful message.
@@ -102,6 +119,31 @@ ans: I ensure Kafka reliability by setting acknowledgment level to “all”, en
 What happens if Notification Service is down?
 
 If the Notification Service is down, the system continues to work normally. Kafka stores all events until the service comes back online, ensuring no notifications are lost.
+
+
+HOW DID YOU IMPLEMENT KAFKA IN YOUR PROJECT?
+
+ANS :I implemented Kafka in my ZocDoc-style appointment system to enable asynchronous, event-driven communication between microservices, especially for notifications and payment events.
+
+Implementation details:
+
+Producer Services:
+.Booking Service publishes events like booking-confirmed.
+.Payment Service publishes payment-success events.
+.Used KafkaTemplate to send event objects containing patientId, doctorId, bookingId, and timestamps.
+
+Consumer Service:
+
+.Notification Service subscribes to these topics using @KafkaListener.
+.Sends emails/SMS based on the event type.
+
+Reliability:
+
+Configured ack=all for guaranteed delivery.
+Enabled retries and idempotent consumer logic.
+Used consumer groups for scalability and fault tolerance.
+
+
 
 
 How do you upload images to S3?
