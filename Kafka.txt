@@ -1,6 +1,6 @@
 Apache Kafka
 ___________
-
+Apache Kafka is a distributed event-streaming platform that enables systems to communicate by exchanging messages asynchronously. It acts as a message broker where producers publish events and consumers subscribe to and process those events independently. This makes Kafka highly suitable for real-time data exchange and microservices communication.
 -> It acts as mediator to exchange messages (Message Broker)
 -> Kafka is very useful for real time data exchange
 -> Publisher will publish the message and subscriber will consume the message

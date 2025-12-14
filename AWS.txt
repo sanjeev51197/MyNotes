@@ -1,5 +1,54 @@
-AWS
+🔧 What is DevOps?
+##########################################
+DevOps is a combination of two words:
+Dev = Development (writing code)
+Ops = Operations (managing infrastructure, deployment, and monitoring)
+👉 DevOps is a culture, set of practices, and tools that aim to:
+Bridge the gap between development and operations teams, so software can be built, tested, and released faster, more reliably, and continuously.
+
+
+🎯 Main Goals of DevOps
+#####################################
+Faster delivery of software
+Automation of processes (build, test, deploy)
+Improved collaboration between teams
+Continuous integration and continuous deployment (CI/CD)
+Higher software quality with fewer bugs
+Rapid recovery from failures
+
+
+
+###################################################################AWS #############################################
+
+
 ---------------------------------
+☁️ What is Cloud Computing?
+################################
+Cloud computing is the delivery of IT resources like servers, storage, databases, and software over the internet, on a pay-as-you-go basis.
+
+🧱 What is IaaS (Infrastructure as a Service)?
+####################################################
+-> IaaS is a cloud service model where the cloud provider gives you raw infrastructure, and you build everything on top of it.
+
+⚙️ What is PaaS (Platform as a Service)?
+#############################################
+PaaS is a cloud service model where the cloud provider gives you a ready-made platform (runtime, OS, web server, etc.) so that you can directly deploy and run your application — without worrying about setting up servers or infrastructure.
+
+💻 What is SaaS (Software as a Service)?
+####################################################
+SaaS is a cloud service model where the cloud provider gives you ready-to-use software, and you can access it through the internet — no installation, no setup, no servers.
+
+🎯 Key Idea:
+You simply use the software; everything else — like servers, updates, backups, and security — is managed by the cloud provider.
+
+☁️ What is AWS Cloud?
+##############################
+AWS stands for Amazon Web Services – it’s the world's most popular cloud provider, offering a wide range of cloud computing services to individuals, startups, enterprises, and governments.
+
+☁️ Elastic Compute Cloud (EC2) - AWS Service
+##############################################################
+EC2 is one of the most demanded services in AWS. It allows you to create virtual machines (VMs) in the AWS cloud, which are called EC2 instances.
+
 
 EBS ->
 EBS = Elastic Block Store
