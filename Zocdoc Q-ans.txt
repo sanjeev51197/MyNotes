@@ -1,13 +1,105 @@
+Explain Your Project
+########################
+I worked on a CareConnect healthcare appointment booking system, which allows patients to search for doctors based on specialization and location, view real-time availability, book appointments, and make online payments. Doctors can manage their profiles, availability schedules, and view upcoming appointments.
+
+The application was built using a microservices architecture with Spring Boot and Java 17. Each core business function was developed as an independent service, such as Doctor Service, Patient Service, Booking Service, Payment Service, and Notification Service. These services communicate with each other using Feign clients, are registered with Eureka Service Discovery, and are accessed through a centralized API Gateway.
+
+The system uses MySQL as the primary database, Redis for caching frequently accessed data like doctor search results and availability, Apache Kafka for asynchronous notification processing, and Stripe for secure payment handling. Doctor profile images and patient medical reports are stored in AWS S3. The application is containerized using Docker, deployed on Kubernetes, and automated using Jenkins CI/CD pipelines. Security is handled using JWT-based authentication, and APIs are documented using Swagger.
+
+
+What Was Your Role in the Project?
+
+I worked as a Java Backend Developer with around 3.5 years of experience, 
+“I was responsible for backend microservice development, inter-service communication, payment integration, performance optimization using Redis, asynchronous messaging using Kafka, and deploying the application using Docker, Kubernetes, and CI/CD pipelines.”
+
+Project Domain & Business Logic
+###############################
+My project belongs to the Healthcare / HealthTech domain, specifically a Digital Healthcare Appointment Booking System.
+The business goal of the application is to digitize and simplify the process of finding doctors, booking appointments, and managing payments and notifications, similar to platforms like ZocDoc or Practo.
+
+
+What is your Project Domain and explain the Business logic?
+
+“The project belongs to the healthcare domain, and its business logic focuses on doctor discovery, real-time availability management, secure appointment booking, payment processing, and automated notifications.”
+
+
+
+
 Why did you use separate services instead of a monolith?
 
 ans: I used separate microservices because each part of the system has different requirements. Doctor Service is read-heavy and needs caching, Payment Service needs high security, Booking Service needs strict availability checks, and Notification Service works asynchronously. If everything was in one monolith, scaling and updating would become difficult. Microservices make the system easier to maintain, deploy, and scale independently.
+
+
+Which Java version did you use in your project?
+
+ans :I used Java 17 in my project. Java 17 is a Long-Term Support (LTS) version and works very well with Spring Boot 3, which I used for building microservices. It provides better performance, long-term stability, and modern language features while remaining fully backward compatible with enterprise applications.
+
+
+Why didn’t you use Java 21?
+
+ans :I did not use Java 21 mainly because Java 17 was the stable Long-Term Support (LTS) version officially recommended and widely adopted with Spring Boot 3 at the time of development. Java 17 provided all the features and performance improvements required for our microservices architecture, while ensuring maximum compatibility and long-term stability in production.
+
+Although Java 21 is also an LTS release, it was relatively newer, and not all enterprise libraries and frameworks had mature, production-proven support when the project was started. Since this was a business-critical healthcare booking system, we prioritized stability, ecosystem maturity, and lower upgrade risk over adopting the latest version.
+
+Additionally, the project did not require Java 21-specific features such as Virtual Threads, because our system already handled concurrency efficiently using asynchronous communication (Kafka) and scalable Kubernetes deployments.
+
+
+
+
 
 How do your microservices communicate? Why Feign Client?
 
 ans: My microservices communicate with each other using Feign Client registered through Eureka. Feign makes service calls very easy because I only write an interface instead of manual REST code. It also supports built-in load balancing and works smoothly with Resilience4j for retries and circuit breakers. This keeps communication clean, reliable, and maintainable.
 
 
-How does your API Gateway route requests?
+
+
+#Why did you use Feign Client instead of RestTemplate?
+
+I used Feign Client instead of RestTemplate because Feign provides a declarative, cleaner, and more maintainable way to handle inter-service communication in a microservices architecture.
+
+With RestTemplate, we need to manually write boilerplate code such as building URLs, handling HTTP requests, responses, error handling, and serialization. This makes the code harder to read and maintain, especially when multiple microservices need to communicate frequently.
+
+Feign, on the other hand, allows us to define interfaces annotated with REST mappings, and Spring automatically generates the implementation. This makes service-to-service calls simpler, readable, and less error-prone.
+
+
+
+
+
+#How did you avoid double booking?
+
+In my ZocDoc-style appointment booking system, I avoided double booking by combining database-level constraints, transactional locking, and final availability validation during booking confirmation.
+
+First, when a patient searches for doctors, the available time slots are shown from Doctor Service, often served from Redis cache for performance. However, this availability data is treated as read-only and temporary, not final.
+
+When a user selects a slot and initiates booking, the Booking Service performs a real-time availability check by calling the Doctor Service using Feign Client. At this stage, the booking is created in a PENDING state, and the selected slot is temporarily locked for that booking.
+
+At the database level, I enforced unique constraints on the combination of doctor ID, appointment date, and time slot. This ensures that even if two requests reach the system at the same time, the database prevents duplicate confirmed bookings for the same slot.
+
+After payment is completed through Stripe, the Booking Service performs a final validation inside a transaction before confirming the booking. If the slot is still available, the booking status is updated to CONFIRMED; otherwise, the booking is rejected and the payment is handled accordingly.
+
+This multi-layer approach ensures consistency even under high concurrency and guarantees that no two patients can book the same doctor at the same time slot.
+
+
+
+
+#How did you add API Gateway in your project?
+
+ans :In my ZocDoc-style appointment booking system, I implemented an API Gateway to act as a single entry point for all client requests and to manage cross-cutting concerns across microservices. This helped simplify client communication and improved security, routing, and scalability.
+
+First, I created a separate API Gateway service using Spring Cloud Gateway. I added the required Spring Cloud dependencies and configured the gateway to register itself with Eureka Service Discovery. This allowed the gateway to dynamically discover backend services without hardcoding service URLs.
+
+Next, I configured route definitions in the gateway using service IDs registered in Eureka. For example, requests coming to /doctor/** were routed to the Doctor Service, /booking/** to the Booking Service, and /payment/** to the Payment Service. Because of Eureka integration, the gateway automatically load-balanced requests across multiple instances of a service.
+
+I also implemented cross-cutting features at the gateway level such as request validation, authentication handling, logging, and rate limiting. This ensured that only valid and authorized requests reach the backend services, reducing duplication of logic across microservices.
+
+By introducing the API Gateway, the system became more secure and scalable, and it allowed services to evolve independently while providing a clean and consistent interface to clients
+
+
+
+
+
+#How does your API Gateway route requests?
 
 Answer: My API Gateway uses Spring Cloud Gateway to route incoming client requests to the correct microservice based on URL paths. I also added a global pre-filter to validate JWT tokens before allowing the request to pass through. The gateway handles logging and can apply circuit breakers if needed. Using lb://SERVICE-NAME ensures requests are load-balanced through Eureka.
 
@@ -15,7 +107,7 @@ How did you handle distributed logging?
 
 answer: I implemented distributed logging using Logback along with a unique Correlation ID for every request. Each microservice logs the trace ID, service name, and timestamp so the entire flow can be tracked across services. In Kubernetes, pod-level logs helped identify failures quickly. This made it easy to trace complete flows like booking → payment → notification.
 
-Why did you keep Booking Service separate from Doctor Service?
+#Why did you keep Booking Service separate from Doctor Service?
 
 ans:I kept the Booking Service separate because booking involves complex workflows like payments, availability locking, and Kafka notifications. Doctor Service only handles doctor profiles, so mixing both would make the system tightly coupled and harder to scale. During peak hours, booking traffic is very high, so having it separate ensures better performance and independent deployment. This keeps the architecture clean and maintainable.
 
@@ -36,6 +128,21 @@ How did you optimize database queries?
 ans :I optimized database performance by adding indexes on frequently searched fields like doctor_id and slot_time. I used pagination for large doctor lists and JPA projections to return only required fields. For repeated lookups, I also denormalized small pieces of data to reduce joins and improve query speed.
 
 
+
+How did you add Redis cache in your project?
+
+ans :In my ZocDoc-style appointment booking system, I integrated Redis as an in-memory caching layer to improve performance and reduce repeated database calls, especially for doctor search and availability data, which are frequently accessed by users.
+
+First, I added the Spring Boot Redis starter dependency to the project and configured the Redis host and port in the application configuration file. This allowed my Spring Boot services to connect to the Redis server seamlessly.
+
+Next, I enabled caching at the application level using Spring’s @EnableCaching annotation. In the Doctor Service, I cached frequently requested data such as doctor lists filtered by specialization and area and available time slots using the @Cacheable annotation. This ensures that repeated search requests are served directly from Redis instead of hitting the MySQL database every time.
+
+To maintain data consistency, I implemented cache eviction strategies. Whenever a doctor updates their profile, schedule, or availability, or when a booking is confirmed, I invalidated or refreshed the relevant cache entries using @CacheEvict. This ensures that users always see up-to-date availability information while still benefiting from fast responses.
+
+By using Redis caching, the application achieved faster response times, reduced database load during peak hours, and improved overall scalability. Redis worked particularly well with the microservices architecture, as it provided a centralized and lightweight caching solution without tightly coupling services.
+
+
+
 What did you store in Redis Cache and why?
 
 ans: I used Redis to cache frequently accessed data like doctor list, doctor profiles, search results, and time slot availability. This reduced repeated database hits and significantly improved response time and overall system performance.
@@ -48,9 +155,7 @@ Answer:I handled cache invalidation by deleting the old Redis keys whenever a do
 Remove old cache using redisTemplate.delete(key) 
 
 
-Did you use Redis as distributed lock for double booking?
 
-ans : Yes, I used Redis as a distributed lock to prevent double booking. I applied SETNX on the doctor’s time slot—if the lock exists, the request is rejected; if it’s free, the booking proceeds. Additionally, I enforced a unique constraint on (doctorId, slotTime) in the database for extra safety.
 
 
 how did you implement redis in your project?
@@ -68,6 +173,7 @@ Used RedisTemplate or @Cacheable annotations in service layer to store search re
 Cache Invalidation:
 When a doctor updates their profile or schedule, the cache is refreshed using @CacheEvict, ensuring patients always see up-to-date availability.
   
+
   
 
 What happens if Doctor Service is down during booking?
@@ -75,14 +181,63 @@ What happens if Doctor Service is down during booking?
 ans :If the Doctor Service is down during booking, Resilience4j ensures stability. The circuit breaker opens, retry attempts are made, and if all fail, a fallback response is returned. This prevents the Booking Service from crashing and provides the user with a graceful message.
 
 
+
+
+
 How do you detect microservice failures?
 
 ans:I detect microservice failures using multiple mechanisms: Eureka heartbeats to monitor service registration, Spring Boot Actuator /health endpoints for service status, Kubernetes liveness and readiness probes to check pod health, and logging alerts to notify of any issues.
 
 
+How did you add logging in your project?
+
+ans: In my ZocDoc-style appointment booking system, I implemented centralized and structured logging to track application behavior, debug issues, and monitor service interactions across multiple microservices. Since the application is built using Spring Boot, I used the default SLF4J with Logback for logging.
+
+First, I added logging configuration in each microservice and used the SLF4J Logger in controllers and service classes to log important application events such as incoming requests, service method execution, booking creation, payment status updates, and error scenarios. This helped in tracing the complete request flow from the API Gateway through backend services.
+
+I configured different log levels like INFO, DEBUG, WARN, and ERROR in the application.yml file. Informational logs were used for successful operations such as booking confirmation, while error logs were used to capture exceptions like payment failures, service timeouts, or invalid requests. This allowed me to control the verbosity of logs across environments like development and production.
+
+To improve traceability in a microservices environment, I logged request IDs and booking IDs so that a single user request could be tracked across services such as Booking, Payment, and Notification. Logs were written to both the console and log files, making it easier to analyze issues during deployments or production incidents.
+
+Overall, logging helped in faster debugging, better monitoring, and understanding system behavior under different scenarios, especially when multiple services interacted asynchronously through Kafka.
+
+
+
+#What did you do when logging failures occurred?
+
+ans :When logging failures occurred in my ZocDoc microservices project, I followed a structured approach to identify, isolate, and resolve the issue without impacting business functionality.
+
+First, I ensured that logging never blocked the main application flow. Logging was treated as a non-functional concern, so even if log writing failed due to disk issues or configuration problems, the core services like booking, payment, and notification continued to function normally.
+
+Next, I checked the log configuration and log levels. Many issues were related to incorrect log paths, missing permissions, or overly verbose log levels in production. I fixed this by validating the Logback configuration, ensuring the log directory existed, and adjusting log levels to reduce noise while keeping critical ERROR and WARN logs enabled.
+
+For runtime failures such as exceptions not being logged, I implemented global exception handling using @ControllerAdvice. This ensured that every unhandled exception was consistently logged with proper context such as booking ID, service name, and request details.
+
+In cases where logs were missing during inter-service communication, I added correlation IDs to track requests across API Gateway, Booking, Payment, and Notification services. This helped trace failures even if partial logs were lost.
+
+Overall, by making logging asynchronous, validating configurations, and ensuring graceful failure handling, I ensured that logging issues never impacted system stability, and troubleshooting remained efficient.
+
+
+
 What patterns did you use for inter-service calls?
 
 ans :For inter-service calls, I used patterns like Circuit Breaker to prevent cascading failures, Retry for temporary issues, TimeLimiter to avoid long waits, RateLimiter to control traffic spikes, and Feign Client with load balancing for reliable service-to-service communication.
+
+
+#How did you add JWT in your project?
+
+In my ZocDoc-style appointment booking system, I implemented JWT-based authentication to secure APIs and ensure that only authenticated users could access protected resources. Since the application follows a microservices architecture, I handled authentication centrally using the API Gateway, which validated JWT tokens before forwarding requests to backend services.
+
+First, I added the required JWT and Spring Security dependencies to the project. I created an Authentication Service responsible for user login and token generation. When a user logs in with valid credentials, the service generates a JWT token containing user details such as user ID, role (PATIENT or DOCTOR), and token expiry time, and signs it using a secret key.
+
+Next, I configured Spring Security filters at the API Gateway level. A custom JWT filter intercepts every incoming request, extracts the token from the Authorization header, validates its signature and expiry, and checks user roles. If the token is valid, the request is forwarded to the respective microservice; otherwise, it is rejected with a 401 Unauthorized response.
+
+The backend microservices trust the API Gateway and do not perform token validation again, keeping them lightweight and focused on business logic. Role-based authorization was also enforced so that only doctors could update schedules and only patients could book appointments.
+
+This JWT-based approach ensured stateless authentication, improved scalability, and centralized security management across all services.
+
+
+
 
 
 
@@ -94,6 +249,20 @@ ans :Authentication works using JWT tokens. When a user logs in, the Login API g
 How do you secure communication between services?
 
 ans:I secure communication between services by keeping them inside the Kubernetes ClusterIP network, so they are not publicly accessible. All requests go through the API Gateway, where JWT tokens are validated. This ensures that no service accepts unauthorized or external requests directly.
+
+
+
+
+#How did you add AWS S3 for file upload in your project?
+
+ans :In my project, I integrated AWS S3 to store doctor profile images and patient medical reports securely and efficiently. First, I created an S3 bucket in AWS and configured proper permissions using IAM, ensuring the application had access only to required S3 operations like upload and download. Then, I added the AWS SDK dependency to my Spring Boot project and configured the S3 access key, secret key, region, and bucket name in the application configuration.
+
+Next, I created a dedicated S3 service class that used the AmazonS3 client to handle file upload logic. When a user uploads a file, the controller receives it as a MultipartFile, generates a unique file name to avoid conflicts, and uploads it to the S3 bucket using putObject. After successful upload, I stored the returned S3 file URL in the MySQL database instead of storing the actual file, keeping the database lightweight.
+
+I also configured proper content type, access control (private or public), and handled exceptions such as upload failures. This approach ensured scalability, high availability, and secure file storage while keeping the application performant.
+
+
+
 
 
 How do you secure S3 uploads?
@@ -119,6 +288,35 @@ ans: I ensure Kafka reliability by setting acknowledgment level to “all”, en
 What happens if Notification Service is down?
 
 If the Notification Service is down, the system continues to work normally. Kafka stores all events until the service comes back online, ensuring no notifications are lost.
+
+
+How did you add Kafka in your project?
+
+ans : In my ZocDoc-style appointment booking system, I integrated Apache Kafka to handle asynchronous communication between microservices, mainly for the Notification Service. The primary goal was to decouple the Booking and Payment services from notification logic, so that booking and payment processing remain fast and reliable even if notification delivery is slow or temporarily unavailable.
+
+First, I added the Spring Kafka dependency to the project and configured Kafka broker details such as bootstrap servers, serializers, and consumer groups in the application configuration file. This allowed my services to act as Kafka producers and consumers.
+
+When a booking is successfully confirmed after payment, the Payment Service publishes a Kafka event (for example, BOOKING_CONFIRMED) to a Kafka topic. This event contains essential details like booking ID, doctor ID, patient ID, appointment date, and contact information. The Booking or Payment Service acts as the producer, sending the event using KafkaTemplate.
+
+The Notification Service acts as a Kafka consumer and listens to this topic using @KafkaListener. When it receives the event, it processes the message and sends email or SMS notifications to both the doctor and the patient. Because Kafka works asynchronously, the booking flow does not wait for notifications to be sent, which significantly improves performance and user experience.
+
+This Kafka-based approach also improves fault tolerance and scalability. If the Notification Service is temporarily down, Kafka safely stores the messages and delivers them once the service is back online. This ensures no booking confirmation is lost and makes the system more reliable in a microservices environment.
+
+Payment Service (Producer)
+→ Kafka Topic (BOOKING_CONFIRMED)
+→ Notification Service (Consumer)
+→ Email / SMS sent
+
+
+#How did you configure SMS and Email in your project?
+
+ans: In my ZocDoc-style appointment booking system, I configured email and SMS notifications inside a dedicated Notification Service to ensure clean separation of concerns and easy maintenance.
+
+For email configuration, I used Spring Boot Mail (SMTP). I added the Spring Mail dependency and configured SMTP properties such as host, port, username, and password in the application.yml file. These credentials were stored securely using environment variables and not hardcoded in the codebase. Spring’s JavaMailSender was then used to send appointment confirmation emails when a booking confirmation event was received from Kafka.
+
+For SMS configuration, I integrated an external SMS provider such as Twilio. I added the provider’s dependency and configured the account SID, authentication token, and sender number in the application configuration file. These values were injected using @Value annotations. The Notification Service uses the provider’s API to send SMS messages containing appointment details like doctor name, date, and time.
+
+Both email and SMS sending were triggered asynchronously through Kafka events. This ensured that configuration issues or temporary failures in notification services did not affect the main booking or payment flow. Logging and basic retry mechanisms were added to track failures and improve reliability.
 
 
 HOW DID YOU IMPLEMENT KAFKA IN YOUR PROJECT?
@@ -160,8 +358,20 @@ How do you restrict unauthorized access to S3?
 ans: I restrict unauthorized access to S3 using IAM roles and bucket policies. Public ACLs are disabled, and only the backend server is allowed to upload or access files, ensuring secure storage.
 
 
-Why did you choose Stripe?
+#Why did you choose Stripe?
 I chose Stripe because it is easy to integrate, provides a secure payment system, supports webhooks for real-time updates, offers a built-in UI, and handles session-based payments smoothly.
+
+
+
+How did you integrate Stripe in your project? (Step-by-Step)
+ans:
+In my ZocDoc-style appointment booking system, I integrated Stripe as the payment gateway inside a dedicated Payment Service to handle secure online payments. First, I added the official Stripe Java SDK dependency to the project and stored the Stripe secret key securely in the application configuration file, which I injected using Spring’s @Value annotation.
+
+When a patient books an appointment, the Booking Service creates a booking in PENDING state and then calls the Payment Service, which generates a Stripe Checkout Session. Stripe returns a secure, hosted payment URL, and the user is redirected to this page to complete the payment. This approach ensures that no card details are handled or stored by our application, as Stripe manages PCI compliance.
+
+After the payment is completed, Stripe redirects the user to a success or cancel URL configured during session creation. In the success callback, I retrieve the Stripe session ID and verify the payment status by calling Stripe’s API. If the payment status is PAID, I confirm the booking by calling the Booking Service using Feign Client and update the booking status in the database.
+
+Once the booking is confirmed, a Kafka event is published, which is consumed by the Notification Service to send confirmation emails or SMS messages to both the doctor and the patient. If the payment fails or is cancelled, the booking remains unconfirmed and the time slot is released. This entire flow ensures secure payment handling, consistency across services, and reliable user notification.
 
 
 How did you handle Stripe success callback?
@@ -174,8 +384,74 @@ How do you handle payment failure or cancellation?
 ans: If payment fails or is cancelled, the booking stays in PENDING status. No confirmation is sent, and the patient receives a message saying “Payment Cancelled.”
 
 
-How did you deploy your application on Kubernetes?
+#How did you deploy your application?
 
-ans: I deployed the application on Kubernetes by creating Docker images for each microservice and defining Deployment and Service YAMLs. The API Gateway is exposed via NodePort, and ConfigMaps and Secrets are mounted for configuration. MySQL runs as a StatefulSet, Kafka is installed using Helm, and the entire deployment is automated with GitHub Actions.
+ans: I deployed my ZocDoc-style appointment booking system using a containerized and automated CI/CD approach with Docker, Jenkins, and Kubernetes. The goal was to ensure consistent deployments, scalability, and minimal manual intervention across environments.
 
+First, I containerized each microservice—Doctor Service, Patient Service, Booking Service, Payment Service, Notification Service, API Gateway, and Eureka Server—using Docker. Each service had its own Dockerfile, where I packaged the Spring Boot application into a lightweight container image using a JDK base image. This ensured that the application ran consistently across all environments.
+
+Next, I used GitHub as the source code repository and integrated it with Jenkins for CI/CD. Whenever code was pushed to the repository, Jenkins automatically triggered a pipeline that built the application, ran unit tests using JUnit and Mockito, generated code coverage reports using JaCoCo, and created Docker images for each service.
+
+After the Docker images were built, Jenkins pushed them to a container registry. I then deployed these images to a Kubernetes cluster using Kubernetes deployment and service YAML files. Kubernetes managed container orchestration, including pod creation, self-healing, and rolling updates.
+
+I exposed services internally using ClusterIP and externally using NodePort or LoadBalancer for the API Gateway. Kubernetes also handled scaling, allowing multiple replicas of services like Booking and Doctor Service to run during high traffic.
+
+Overall, this deployment strategy provided a scalable, fault-tolerant, and automated deployment pipeline, making the system reliable and easy to maintain.
+
+
+
+
+
+#How did you add Saga in your project?
+
+In my ZocDoc-style appointment booking system, I implemented the Saga pattern to maintain data consistency across multiple microservices involved in the booking flow, such as Booking Service, Payment Service, Doctor Service, and Notification Service. Since each service has its own database, a traditional distributed transaction was not feasible, so Saga was used to handle long-running transactions.
+
+I followed a choreography-based Saga approach using Kafka rather than a centralized orchestrator. In this approach, each service performs its local transaction and communicates the outcome by publishing events to Kafka topics.
+
+When a patient initiates a booking, the Booking Service creates a booking with PENDING status and publishes a BOOKING_CREATED event. The Payment Service listens to this event and initiates the Stripe payment process. Once the payment is completed, the Payment Service publishes either a PAYMENT_SUCCESS or PAYMENT_FAILED event.
+
+If the payment is successful, the Booking Service consumes the success event and confirms the booking, updates the database, and then publishes a BOOKING_CONFIRMED event. The Doctor Service updates the doctor’s schedule, and the Notification Service sends confirmation messages to both doctor and patient.
+
+If any step fails—for example, if payment fails or the slot becomes unavailable—a compensating transaction is triggered. In this case, the Booking Service marks the booking as CANCELLED, releases the time slot, and publishes a failure event so that other services can roll back their local changes.
+
+This event-driven Saga implementation ensures eventual consistency, avoids tight coupling between services, and allows the system to recover gracefully from partial failures.
+
+
+
+
+
+
+#Did you use Swagger in your project?
+
+Yes, I used Swagger (OpenAPI) in my project for API documentation and testing. Since the system is built using Spring Boot microservices, Swagger helped document all REST endpoints in a standardized and interactive way, making it easier for developers and testers to understand and verify the APIs.
+
+I integrated Swagger using Springdoc OpenAPI, which is compatible with Spring Boot 3 and Java 17. After configuration, each microservice exposed a Swagger UI page where APIs could be tested directly from the browser without needing external tools like Postman.
+
+Swagger was especially useful during development and integration, as it helped frontend teams and other backend services understand request/response structures, required parameters, and error responses. It also reduced miscommunication between teams and improved overall development speed.
+
+
+#How did you fix bugs in your project? 
+
+In my project, I followed a structured and practical approach to fix bugs. First, I identified issues through application logs, API error responses, QA feedback, and failed test cases in the CI pipeline. Once a bug was reported, I reproduced it in the local or lower environment using the same request data to clearly understand the problem. Then I analyzed the root cause by checking logs, database records, cache behavior, and inter-service communication. For example, issues like double booking were caused by concurrent requests, which I fixed by adding transactional handling, database constraints, and re-validating slot availability before confirmation. Payment-related bugs were handled by properly validating Stripe payment status and handling failure or cancel scenarios. After fixing the code, I added or updated JUnit and Mockito test cases to ensure the issue would not reoccur. Finally, I performed regression testing, raised a pull request for code review, deployed the fix through Jenkins CI/CD, and monitored logs post-deployment to confirm stability.
+
+
+
+
+#Where did you applied oops in your Project?
+
+ans :“I applied OOPS throughout the project using encapsulation in entities, abstraction via service interfaces, inheritance in exception handling, and polymorphism in notification and payment services.
+
+
+#Which Exceptions Occurred in Your Project & How Did You Handle Them?
+
+ans: In my healthcare appointment booking project, I encountered both business exceptions and technical exceptions. I handled them using custom exceptions, global exception handling, proper HTTP status codes, logging, and fallback mechanisms to ensure system stability.
+
+
+
+#How Did You Add Singleton Pattern in Your Project?
+
+In my project, I did not manually implement the Singleton pattern using static classes. Instead, I relied on Spring Boot’s default bean scope, which is Singleton by default, to manage single instances of core components.
+
+Spring’s IoC container ensures that only one instance of a bean is created per application context, and the same instance is shared across the application wherever it is injected.
+“I used the Singleton pattern through Spring’s default singleton-scoped beans, where services, repositories, and configuration components are created once and reused across the application.”
 
