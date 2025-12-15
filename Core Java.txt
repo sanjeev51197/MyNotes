@@ -1,0 +1,600 @@
+Java is Functional programming language or object-oriented lang?
+################################################################
+Java is primarily an Object-Oriented Programming (OOP) language, because it is based on classes and objects, supports encapsulation, inheritance, polymorphism, and abstraction. Every Java program revolves around objects, and code is organized into classes.
+
+However, since Java 8, it also supports functional programming features like lambda expressions, functional interfaces, and streams, which allow treating functions as first-class citizens and writing declarative code.
+
+
+is java purely object-oriented?
+##############################
+No, Java is not a purely object-oriented language.
+
+While Java is mainly object-oriented, it still supports primitive data types like int, double, and boolean, which are not objects. Pure object-oriented languages, like Smalltalk, treat everything as objects.
+
+Java uses wrapper classes (Integer, Double, Boolean, etc.) and autoboxing/unboxing to bridge primitives with objects, but the presence of primitives means it is not purely object-oriented.
+
+
+what is the difference between java 17 and java 8 ? why you choose java 17?
+##########################################################################
+Java 8 introduced lambdas, Streams, and default methods, while Java 17 (LTS) adds modern features like sealed classes, records, pattern matching, switch expressions, and improved performance and security.
+
+We choose Java 17 because it is long-term supported, more secure, faster, and has modern language features that make code cleaner and maintainable.
+
+
+What is JDK,JRE,JVM
+####################
+JDK, JRE, and JVM are core components of the Java platform that work together to develop and run Java applications.
+ 
+*The JDK (Java Development Kit) is a complete development package that includes tools such as the compiler (javac), debugger, and other utilities along with the JRE, and it is used to write and build Java programs.
+
+* The JRE (Java Runtime Environment) provides the environment required to run Java applications and includes the JVM along with core libraries, but it does not contain development tools. 
+
+*The JVM (Java Virtual Machine) is the engine that executes Java bytecode, manages memory, handles garbage collection, and ensures platform independence by allowing Java programs to run on any operating system.
+
+
+What is JIT?
+#############
+JIT (Just-In-Time Compiler) is a component of the JVM that improves Java application performance by converting frequently executed bytecode into native machine code at runtime.
+
+
+
+explain the main method of the class psvm()
+############################################
+The main method is the entry point of a Java application. It is the method that the JVM calls to start program execution.
+
+public → So the JVM can access it from anywhere.
+static → So the JVM can call it without creating an object of the class.
+void → Because the JVM does not expect any return value.
+String[] args → Used to accept command-line arguments passed at runtime.
+
+
+
+
+what is Variable ? How many type of Variable?
+################################################
+A variable in Java is a named memory location used to store data that can change during program execution. Variables allow programs to hold, manipulate, and retrieve values.
+
+In Java, there are three main types of variables based on their scope and lifetime:
+
+*Local Variables – Declared inside a method, constructor, or block and used only within that scope. They must be initialized before use and are stored in stack memory.
+
+*Instance Variables – Declared inside a class but outside methods, and each object of the class has its own copy. They are stored in heap memory and represent the state of an object.
+
+*Static Variables – Declared using the static keyword and shared among all objects of a class. Only one copy exists in memory, and it is stored in the method area (or metaspace).
+
+what is Reference Variable?
+###########################
+A reference variable is a variable that stores the memory address (reference) of an object rather than the actual data. It is used to access the object’s methods and variables.
+
+
+what is Class Loader ?
+#######################
+A ClassLoader is a part of the JVM responsible for loading Java class files into memory at runtime. It loads classes dynamically when they are first referenced, rather than loading all classes at once. Java follows a hierarchical class loading mechanism that includes the Bootstrap ClassLoader, Extension (Platform) ClassLoader, and Application ClassLoader
+
+
+Explain Memory Management in Java by JVM?
+##########################################
+Memory management in Java is the process by which the JVM automatically allocates and deallocates memory for objects during program execution.
+
+ Java uses a managed memory model where memory is divided into areas such as stack, heap, and method area. Objects are created in the heap, method calls and local variables are stored in the stack, and class-level data is stored in the method area. The JVM uses garbage collection to automatically remove unused objects from heap memory, which helps prevent memory leaks and improves application stability without requiring manual memory management from the developer.
+
+
+what are Access Specifiers in Java?
+###################################
+Access specifiers in Java are keywords used to control the visibility and accessibility of classes, methods, variables, and constructors. They help enforce encapsulation and protect data from unauthorized access. Java provides four access specifiers: private, default (no keyword), protected, and public.
+ *private members are accessible only within the same class.
+ *default members are accessible within the same package.
+ *protected members are accessible within the same package and through subclasses outside the package.
+ *public members are accessible from anywhere in the application.
+
+
+is java call by value or call by reference?
+###########################################
+Java is strictly a call-by-value language. When a method is called, Java passes a copy of the value to the method.
+
+
+what is var type in java?
+#########################
+var in Java is a feature introduced in Java 10 that allows local variable type inference. It lets the compiler automatically determine the data type of a local variable based on the assigned value at compile time. var can only be used for local variables inside methods, loops, or blocks and cannot be used for instance variables, method parameters, or return types. It improves code readability by reducing verbosity while still maintaining strong static typing.
+
+
+why main method is static?
+#############################
+The main method is static in Java because the JVM needs to call it without creating an object of the class. Since program execution starts from the main method, making it static allows the JVM to load the class and invoke main directly. This ensures the program can start execution even before any objects are created.
+
+
+Types of Memory in Java
+#########################
+1. Stack Memory
+
+Stack memory is used to store method calls, local variables, and references to objects. Each thread has its own stack, which makes it thread-safe. Memory is allocated and deallocated automatically when a method is called and returned.
+
+2. Heap Memory
+
+Heap memory is used to store objects and instance variables created at runtime. It is shared among all threads and managed by the Garbage Collector.
+
+3. Method Area (Metaspace)
+
+The method area stores class-level information such as class metadata, method definitions, static variables, and runtime constant pool.
+
+4. Program Counter (PC) Register
+
+The PC register stores the address of the currently executing instruction for each thread. It helps the JVM track execution flow.
+
+5. Native Method Stack
+
+This memory area is used to store information related to native methods written in languages like C or C++.
+
+
+what is Constant Pool?
+#########################
+The Constant Pool is a memory area inside the Method Area that stores constants such as string literals, class names, method names, and primitive constant values. The String Constant Pool is a special part of this area that allows reuse of String objects, improving memory efficiency and performance.
+
+
+what is Garbage Collection ? can we done manually?
+#################################################
+Garbage Collection in Java is an automatic memory management process in which the JVM identifies and removes objects that are no longer reachable or used by the application. It frees heap memory, prevents memory leaks, and improves application performance without requiring manual memory deallocation by the developer.
+
+No, garbage collection cannot be done manually in Java.
+A developer can only request garbage collection using System.gc() or Runtime.getRuntime().gc(),
+
+
+
+What is static keyword in Java?
+###############################
+
+The static keyword in Java is used to declare class-level members. A static variable, method, or block belongs to the class itself, not to any specific object. This means only one copy of a static member exists in memory and it is shared among all objects of that class.
+
+
+Difference between Static and Non-Static
+########################################
+| Aspect          | Static                         | Non-Static                       |
+| --------------- | ------------------------------ | -------------------------------- |
+| Belongs to      | Class                          | Object                           |
+| Memory          | One copy shared by all objects | Separate copy for each object    |
+| Access          | Accessed using class name      | Accessed using object reference  |
+| Object required | ❌ No                           | ✅ Yes                            |
+| Lifetime        | Loaded when class is loaded    | Created when object is created   |
+| Usage           | Common/shared data or behavior | Object-specific data or behavior |
+
+
+#What is intern() in Java?
+intern() adds the String to the String Constant Pool (SCP) and returns the reference of the pooled string.
+
+If the string already exists in the pool → then it returns existing reference
+If it does not exist → adds it to the pool and returns it
+
+
+what is String Why it is Immuatble?
+ans: String is a final class in java.lang used to represent a sequence of characters. Once a String object is created, its value cannot be changed.
+Any modification done it creates a new String object.
+String is immutable in Java to ensure security, thread safety, and efficient memory management. Immutability prevents unintended modifications, supports the String constant pool for memory efficiency, and ensures that Strings are thread-safe and reliable as keys in collections.
+
+
+StringBuffer & StringBuilder
+#############################
+StringBuffer and StringBuilder are mutable classes in Java used to create and modify strings without creating new objects.
+They are used when frequent string modifications (append, insert, delete) are required.
+StringBuffer is thread-safe because its methods are synchronized, which makes it safe to use in multi-threaded environments but slightly slower in performance.
+
+StringBuilder is not thread-safe because it is not synchronized, which makes it faster and suitable for single-threaded scenarios.
+
+
+
+
+What is a Constructor?
+######################
+
+A constructor in Java is a special method used to initialize objects. It has the same name as the class, does not have a return type, and is called automatically when an object is created using the new keyword. Constructors are mainly used to assign initial values to instance variables.
+
+
+What is Constructor Overloading?
+################################
+Constructor overloading means having multiple constructors in the same class with different parameter lists. It allows creating objects in different ways by passing different sets of values while creating the object.
+
+
+What is Constructor Chaining?
+#############################
+Constructor chaining is the process of calling one constructor from another constructor in the same class or from a parent class. This is done using this() to call another constructor of the same class or super() to call the parent class constructor. It helps reuse initialization code and maintain cleaner code.
+
+Interview tip:
+Constructor overloading provides flexibility, while constructor chaining avoids code duplication and ensures proper object initialization.
+---> A child class can call a parent class constructor using super().
+
+what is Default Constructor?
+#############################
+A default constructor is a constructor that takes no arguments. If a class does not explicitly define any constructor, the Java compiler automatically provides a default constructor. This constructor initializes instance variables with their default values and calls the parent class constructor using super()
+
+
+can we override constructor?
+#############################
+No, constructors cannot be overridden in Java.
+This is because constructors are not inherited by child classes and their purpose is to initialize objects, not to provide polymorphic behavior
+
+what is this Keyword?
+#####################
+
+The this keyword refers to the current object of the class. 
+It is used to:
+.Differentiate between instance variables and local variables with the same name.
+.Call other constructors in the same class (this())
+.Pass the current object as a parameter
+
+
+what is super Keyword?
+########################
+
+The super keyword refers to the parent class object. It is used to:
+
+.Call parent class methods that are overridden
+.Access parent class variables
+.Call parent class constructor (super())
+
+
+can constructor be static?
+###########################
+No, a constructor cannot be static in Java.
+Constructors are used to initialize objects and are called when an object is created. Static members belong to the class and can be accessed without creating an object, so making a constructor static would break its purpose. Therefore, Java does not allow constructors to be static.
+
+
+
+What is a Method?
+##################
+A method in Java is a block of code that performs a specific task. It contains a method name, return type, parameters (optional), and a body, and it is used to define the behavior of a class. Methods help in code reusability, readability, and modularity.
+
+
+
+What is Method Overloading?
+###########################
+Method overloading means defining multiple methods with the same name in the same class but with different parameter lists (different type, number, or order of parameters). It is a compile-time polymorphism feature and improves code readability
+
+
+What is Method Overriding?
+##########################
+Method overriding occurs when a child class provides a specific implementation of a method already defined in its parent class with the same method signature. It is a runtime polymorphism feature and allows dynamic method dispatch.
+
+Interview tip:
+Overloading happens at compile time, overriding happens at runtime.
+
+
+Early Binding?
+###############
+Method overloading is called early binding (or compile-time binding) because the method to be executed is decided by the compiler at compile time itself, based on the method signature and the reference type. Since the compiler knows exactly which method to call before the program runs, the binding happens early.
+
+Late Binding?
+#############
+Method overriding is called late binding (or runtime binding) because the method to be executed is decided at runtime by the JVM, based on the actual object type rather than the reference type. The JVM determines which overridden method to call during program execution, so the binding happens late.
+
+
+what is the exact difference between .equals() method and ==  ?
+#################################################################
+The exact difference between == and equals() in Java is based on what they compare.
+
+== operator compares memory references for objects and actual values for primitive data types. It checks whether two variables point to the same memory location.
+
+equals() method compares the content or logical equality of objects. Many classes like String, Integer, and collections override equals() to compare actual data instead of memory references.
+
+
+
+
+
+
+
+What do you mean by OOPS?
+##########################
+OOPs (Object-Oriented Programming) is a programming paradigm that organizes software design around objects rather than functions. An object represents a real-world entity and contains both data (variables) and behavior (methods). OOPs is based on the principles of encapsulation, abstraction, inheritance, and polymorphism, which help in building reusable, secure, and maintainable applications.
+
+The four main pillars of Object-Oriented Programming (OOPs) are:
+
+Encapsulation – The Wrapping of data (variables) and code (methods) together into a single unit (class) and restricting direct access using access specifiers. 
+It helps in data security and controlled access. we use private getters & setters to achieve Encapsulation.
+
+Abstraction – Hiding implementation details and showing only essential features to the user. It is achieved using abstract classes and interfaces and it helps reduce complexity.
+
+Inheritance –  The process of Acquiring properties and behaviors of one class into another using the extends keyword. It promotes code reusability and supports hierarchical relationships.
+
+Polymorphism – The ability of an object to take many forms. It is achieved through method overloading (compile-time) and method overriding (runtime), allowing flexible and dynamic behavior.
+
+
+what is Class?
+
+A class is a blueprint or template that defines the structure and behavior of objects. It contains fields (variables) and methods (functions) that represent the properties and behaviors of real-world entities.
+
+
+what is Object?
+
+An object is a real-world instance of a class. It has its own copy of the class variables and can call the class methods. Objects are created using the new keyword.
+
+
+Types of Inheritance in Java
+##############################
+
+Single Inheritance – One child class inherits from one parent class.
+
+Multilevel Inheritance – A class is derived from another derived class (grandparent → parent → child).
+
+Hierarchical Inheritance – Multiple child classes inherit from the same parent class.
+
+Multiple Inheritance (via Interface) – A class can implement multiple interfaces, achieving multiple inheritance of behavior.
+
+❌ Java does not support multiple inheritance using classes.
+
+
+Why Java Does Not Support Multiple Inheritance (with classes)?
+##############################################################
+
+Java does not support multiple inheritance with classes to avoid ambiguity and complexity, especially the Diamond Problem. When two parent classes have the same method, the compiler cannot decide which method the child class should inherit. This leads to confusion and unreliable behavior.
+
+To solve this, Java allows multiple inheritance through interfaces, where method conflicts are explicitly resolved by the implementing class.
+
+
+what is interface ?
+###################
+An interface in Java is a blueprint of a class that defines a contract by declaring abstract methods (and constants) without providing full implementation. It is used to achieve abstraction and multiple inheritance in Java. 
+
+A class implements an interface using the implements keyword and must provide implementations for all its abstract methods. Interfaces help in loose coupling, scalability, and flexible design.
+
+
+what is Abstract Class ?
+########################
+An abstract class is a class that cannot be instantiated and is used to provide partial implementation and common behavior to its child classes.
+
+
+Difference between Interface and Abstract Class
+###############################################
+| Aspect       | Interface                                    | Abstract Class                               |
+| ------------ | -------------------------------------------- | -------------------------------------------- |
+| Purpose      | Defines a **contract**                       | Provides **partial implementation**          |
+| Methods      | Abstract methods by default                  | Can have abstract and concrete methods       |
+| Variables    | `public static final` only                   | Can have any type of variables               |
+| Inheritance  | Supports **multiple inheritance**            | Supports **single inheritance**              |
+| Keyword used | `implements`                                 | `extends`                                    |
+| Constructor  | ❌ Not allowed                                | ✅ Allowed                                    |
+| Use case     | When multiple classes need the same behavior | When classes share common state and behavior |
+
+
+why do we use default method in interface?
+##########################################
+Default methods in an interface (introduced in Java 8) allow us to provide a method implementation inside the interface itself.
+
+what is SAM interface?
+######################
+A SAM (Single Abstract Method) interface is an interface that contains exactly one abstract method. It is mainly used to support lambda expressions and functional programming in Java. Examples include Runnable, Callable, and Comparator. SAM interfaces make code concise, readable, and expressive when using lambda expressions.
+
+
+what is Marker interface?
+##########################
+A marker interface is an empty interface in Java that does not contain any methods. It is used to mark a class and provide metadata to the JVM or framework so that special behavior can be applied to that class. Examples include Serializable, Cloneable, and RandomAccess.
+
+
+what is Wrapper class in Java?
+###############################
+A wrapper class in Java is a class that converts a primitive data type into an object. Wrapper classes allow primitives to be used in collections, frameworks, and utility methods that require objects. Examples include Integer for int,
+
+
+What is Boxing & Unboxing?
+##########################
+Boxing is the process of converting a primitive data type into its corresponding wrapper class object. Unboxing is the process of converting a wrapper class object back into its primitive data type. Java supports automatic boxing and unboxing, allowing seamless conversion between primitives and objects when required.
+
+
+what toString & parseInt does?
+##############################
+toString() is used to convert a value or object into its String representation. For wrapper classes like Integer, toString() converts a primitive value into a String
+int a = 10;
+String s = Integer.toString(a);  // "10"
+
+parseInt() is used to convert a String into an integer (int) value.
+String s = "123";
+int a = Integer.parseInt(s);
+
+
+what is BufferedReader
+#######################
+BufferedReader is a wrapper class that reads text from a character input stream using a buffer, which improves performance. It allows reading data line by line using the readLine() method and is commonly used with FileReader.
+
+what is FileReader
+##################
+FileReader is a character stream class used to read data from a file character by character. It directly reads characters from the file and is suitable for simple file reading tasks but can be slower for large files.
+
+
+
+Serialization & Deserialization
+###############################
+Serialization is the process of converting a Java object into a byte stream so that it can be stored in a file, sent over a network, or saved in a database. This is done using the Serializable interface.
+
+Deserialization is the reverse process, where the byte stream is converted back into the original Java object. It allows the object’s state to be restored exactly as it was.
+
+what is transient keyword?
+###########################
+The transient keyword in Java is used to prevent a variable from being serialized. When an object is serialized, transient variables are ignored and their values are not saved. This is mainly used for sensitive data like passwords or for fields that should not be persisted.
+
+
+what is the difference between final ,finally ,finalize?
+#######################################################
+
+*final is a keyword used to restrict modification.
+
+Final variable → value cannot be changed
+Final method → cannot be overridden
+Final class → cannot be inherited
+
+
+*finally is a block used with try-catch.
+
+It always executes whether an exception occurs or not
+Used to close resources like files or database connections
+
+*finalize() is a method called by the Garbage Collector before destroying an object.
+Used for cleanup activities
+
+
+how to make a class immutable?
+################################
+To make a class immutable in Java, follow these steps:
+
+1.Declare the class as final so it cannot be extended.
+2.Make all fields private and final to prevent modification.
+3.Do not provide setter methods for fields.
+4.Initialize all fields through a constructor only.
+
+what is static method and default methods?
+###########################################
+Static methods → belong to interface, cannot be overridden
+Default methods → inherited by class, can be overridden
+
+
+
+how to make a String mutable from immutable?
+##############################################
+In Java, String itself cannot be made mutable because it is designed to be immutable.
+However, you can achieve mutable string behavior by using StringBuilder or StringBuffer.
+
+Using StringBuilder (recommended for performance):
+
+String s = "Java";
+StringBuilder sb = new StringBuilder(s);
+sb.append(" Developer");
+System.out.println(sb);  // Java Developer
+
+
+what is type casting and Class casting ?
+##########################################
+1. Type Casting -  It is the process of converting a variable from one data type to another. It can be done in two ways:
+
+Implicit Casting (Widening) – Automatic conversion from smaller type to larger type (safe).
+
+int a = 10;
+double b = a;  // int → double (implicit)
+
+
+Explicit Casting (Narrowing) – Manual conversion from larger type to smaller type (may lose data).
+
+double d = 9.78;
+int i = (int) d;  // double → int (explicit)
+
+2.Class casting - It is the process of converting an object reference from one class type to another in an inheritance hierarchy. It can be of two types:
+a. Upcasting
+##################
+Upcasting is when a child class object is referenced by a parent class type.
+It is safe and done implicitly.
+
+Only the methods and fields of the parent class are accessible (overridden methods of child are executed due to runtime polymorphism)
+Dog d = new Dog();
+Animal a = d;  // Upcasting
+
+b.Downcasting
+###############
+Downcasting is when a parent class reference is cast back to a child class type.
+It requires explicit casting.
+It is risky because if the object is not actually of the child type, it throws ClassCastException.
+Animal a = new Dog();
+Dog d = (Dog) a;  // Downcasting
+
+
+
+Explain System.out.println()
+###############################
+System.out.println() in Java is a method used to print messages or values to the console, followed by a newline.
+
+System is a final class in java.lang package that provides access to system resources.
+
+out is a static member of System class, of type PrintStream, which represents the standard output stream (console).
+
+println() is a method of PrintStream class that prints the passed argument and moves the cursor to the next line
+
+
+
+difference between static and non-static variable?
+#####################################################
+| Feature    | Static Variable                       | Non-Static Variable                   |
+| ---------- | ------------------------------------- | ------------------------------------- |
+| Belongs to | Class                                 | Object                                |
+| Memory     | One copy shared by all objects        | Each object has its own copy          |
+| Access     | Using class name (ClassName.variable) | Using object reference (obj.variable) |
+| Lifetime   | Exists as long as class is loaded     | Exists as long as the object exists   |
+| Use case   | Shared/common data across all objects | Object-specific data                  |
+
+
+
+1. What is an Operator?
+##########################
+An operator in Java is a symbol that tells the compiler to perform specific mathematical, logical, or relational operations on one or more operands.
+
+2. Types of Operators in Java
+#############################
+| Type                      | Description                     | Example                          |                         |        |
+| ------------------------- | ------------------------------- | -------------------------------- | ----------------------- | ------ |
+| **Arithmetic**            | Perform mathematical operations | `+`, `-`, `*`, `/`, `%`          |                         |        |
+| **Relational**            | Compare values                  | `==`, `!=`, `>`, `<`, `>=`, `<=` |                         |        |
+| **Logical**               | Combine boolean expressions     | `&&`, `                          |                         | `, `!` |
+| **Bitwise**               | Operate at bit level            | `&`, `                           | `, `^`, `~`, `<<`, `>>` |        |
+| **Assignment**            | Assign values to variables      | `=`, `+=`, `-=`, `*=`, `/=`      |                         |        |
+| **Unary**                 | Operate on single operand       | `+`, `-`, `++`, `--`, `!`        |                         |        |
+| **Ternary / Conditional** | Shortcut for if-else            | `condition ? value1 : value2`    |                         |        |
+| **Instanceof**            | Check object type               | `obj instanceof ClassName`       |                         |        |
+
+
+3. What is Ternary Operator?
+############################
+The ternary operator (? :) is a shortcut for an if-else statement.
+It takes three operands: a condition, a value if true, and a value if false.
+
+Syntax:
+variable = (condition) ? valueIfTrue : valueIfFalse
+
+Example:
+int a = 10, b = 20;
+int max = (a > b) ? a : b;  // max = 20
+
+
+
+what about increment and decrement opeartor?
+############################################
+In Java, increment (++) and decrement (--) operators are used to increase or decrease the value of a variable by 1. They can be used in two forms:
+
+1. Pre-Increment / Pre-Decrement
+2. Post-Increment / Post-Decrement
+
+
+what is Enum?
+##############
+An enum in Java is a special data type that represents a fixed set of constants. It is used when a variable can only take one out of a small set of possible values, improving code readability and type safety. Enums are declared using the enum keyword and can have fields, methods, and constructors.
+ex-
+enum Day {
+    MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY, SUNDAY
+}
+
+public class Test {
+    public static void main(String[] args) {
+        Day today = Day.MONDAY;
+        System.out.println(today);  // MONDAY
+    }
+}
+
+Explain Array?
+####################
+An array in Java is a data structure that stores multiple values of the same type in a single variable.
+
+Arrays have a fixed size and are stored in contiguous memory locations.
+Each element can be accessed using an index (starting from 0).
+Arrays can store primitive types or objects
+
+
+
+Explain Cloning in Java
+############################
+Cloning in Java is the process of creating an exact copy of an existing object.
+
+It is done using the clone() method of the Object class.
+
+To enable cloning, the class must implement the Cloneable interface; otherwise, a CloneNotSupportedException is thrown.
+
+There are two types of cloning:
+
+Shallow Cloning – Copies the object but references of contained objects are shared.
+
+Deep Cloning – Creates a copy of the object and all objects it references
+
+
+
+
