@@ -1,7 +1,4 @@
-﻿Access key ID,Secret access key
-AKIA6MFCJQZL7QUUHEKL,0++2YGkAJnrHHicqoReS3sxLAbEhfMLT90x934F1
-
-
+﻿
 terraform init   - CREATE THE TERRRAFORM.AND ADDS THE PLUGIN
 
 terraform validate   .validates the configurATION checks correct syntax
@@ -16,7 +13,7 @@ Architecture of Terraform
 
 1.First creates a main.tf file     'tf' is the extension of terraform file
 
-2.then we add the privder block using secret and access key  and resource you want to perform. 
+2.then we add the provider block using secret and access key  and resource you want to perform. 
 
 3.we apply terraform init which adds all the plugin and it creates a .terraform.lock.hcl file which keeps all the plugin given by the provider for future purpose.
 
