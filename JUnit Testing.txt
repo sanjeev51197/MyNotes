@@ -112,7 +112,8 @@ It Uses an in-memory database (H2 by default) .Each test runs in a transaction a
 It is most commonly used with @DataJpaTest.
 
 @DataJpaTest → replaces your real DB with H2 (in-memory)
-@AutoConfigureTestDatabase lets you: Keep the real database
+@AutoConfigureTestDatabase lets you: Keep the real database.
+
 
 
 
@@ -1031,10 +1032,46 @@ $.user.roles[1] → "USER"
 
 
 
+what is the function of mockmvc.perform?
+#########################################
+mockMvc.perform() is used to simulate an HTTP request to a Spring MVC controller in tests.
+
+In simple words
+
+->It acts like a client (browser/Postman) and sends a fake HTTP request (GET, POST, PUT, DELETE) to your controller without starting the server.
+
+What it does
+Calls the controller endpoint
+Passes through filters, validation, and mappings
+Returns a result so you can verify:
+HTTP status (200, 404, etc.)
+Response body (JSON/XML)
+
+Headers
+
+Example
+mockMvc.perform(get("/users"))
+       .andExpect(status().isOk())
+       .andExpect(jsonPath("$[0].name").value("Alice"));
 
 
 
 
+what assertEquals and verify do?
+################################
+Purpose: To check that the expected result matches the actual result.
+
+Comes from JUnit
+Used to validate test outcomes
 
 
+
+verify
+#######
+Purpose: To check that a mock method was called in a specific way.
+
+It Comes from Mockito ,which is Used to validate interactions with mocks
+
+Example:
+verify(service).findAllUsers();
 

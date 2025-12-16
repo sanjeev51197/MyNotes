@@ -1,0 +1,31 @@
+﻿Access key ID,Secret access key
+AKIA6MFCJQZL7QUUHEKL,0++2YGkAJnrHHicqoReS3sxLAbEhfMLT90x934F1
+
+
+terraform init   - CREATE THE TERRRAFORM.AND ADDS THE PLUGIN
+
+terraform validate   .validates the configurATION checks correct syntax
+
+terraform fmt  -   remove extra space.
+plan -t=tplan     ->it will create a plan
+
+
+
+Architecture of Terraform 
+##########################
+
+1.First creates a main.tf file     'tf' is the extension of terraform file
+
+2.then we add the privder block using secret and access key  and resource you want to perform. 
+
+3.we apply terraform init which adds all the plugin and it creates a .terraform.lock.hcl file which keeps all the plugin given by the provider for future purpose.
+
+4.we then use terraform validate to validates the configurtion checks correct syntax . also we apply terraform fmt for syntax correctness and white spaces.
+
+5.then we generate a terraform plan document by plan -t=tplan . 
+
+6.then we use terraform apply     .that creates a Json based on json structure it creates the aws resources.
+
+
+
+

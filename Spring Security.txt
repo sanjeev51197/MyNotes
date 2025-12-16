@@ -294,4 +294,66 @@ SecurityConfig defines the entire security architecture of a Spring Boot applica
 It sets authorization rules, configures authentication providers, adds JWT filters, disables sessions for stateless APIs, and manages CSRF/CORS.
 In short: It tells Spring how to secure every incoming HTTP request.”
 
-What is OAuth2 in Spring Security?
+
+ What is OAuth 2.0? (Simple & Interview-Ready)
+##############################################
+
+OAuth 2.0 is an authorization framework that allows one application to access another application’s protected resources on behalf of a user without sharing the user’s password.
+
+🧠 In one line
+
+OAuth 2.0 lets you log in or give access using Google, Facebook, GitHub, etc., without giving your password to the app.
+
+How to Add OAuth2 in a Spring Boot Project
+##############################################
+🧩 Step 1: Add Dependency
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-oauth2-client</artifactId>
+</dependency>
+
+🧩 Step 2: Configure application.properties
+👉 Google OAuth config
+spring.security.oauth2.client.registration.google.client-id=YOUR_CLIENT_ID
+spring.security.oauth2.client.registration.google.client-secret=YOUR_CLIENT_SECRET
+spring.security.oauth2.client.registration.google.scope=email,profile
+
+📌 You get client-id & secret from:
+👉 https://console.cloud.google.com
+ → OAuth credentials
+
+🧩 Step 3: Update Security Configuration
+@Bean
+public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    http
+        .csrf(csrf -> csrf.disable())
+        .authorizeHttpRequests(auth -> auth
+            .requestMatchers("/","/login").permitAll()
+            .anyRequest().authenticated()
+        )
+        .oauth2Login(); // 👈 ENABLE OAUTH2 LOGIN
+
+    return http.build();
+}
+
+🧩 Step 4: Run & Test
+
+Open browser:
+
+http://localhost:8080/login
+
+
+
+
+What is AuthenticationManager?
+#############################
+AuthenticationManager is the core interface in Spring Security that:
+Takes username + password
+Verifies credentials
+Uses:
+
+UserDetailsService (your CustomUserDetails)
+
+PasswordEncoder
+
+Returns an authenticated Authentication object if successful
