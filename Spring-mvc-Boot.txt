@@ -10,17 +10,20 @@ What is Dependency Injection (DI) ?
 -> Dependency Injection is a design pattern used by Spring Boot to automatically create and manage objects (dependencies) your classes need — without you manually creating them.
 -> Dependency Injection is a technique where objects (dependencies) are injected into a class by the framework (Spring) at runtime rather than the   object creating them itself.
 
+
 In simple words:
 Class will not create its own objects — Spring will give those objects.  
-Analogy:
+Analogy:x 
 ------------
 Imagine you're building a house. You don’t make the bricks yourself — you ask someone to provide them.
 Similarly, Spring Boot provides the objects your app needs.
 
 
+
 Why Use DI?
 ###############
 “We use DI to make the application loosely coupled, easier to test, easy to maintain, and to let Spring manage object creation instead of manual new() operations.”
+
 
 
 What is Loose Coupling?
@@ -298,6 +301,16 @@ What is @Configuration
 It Marks a class that contains bean definitions. It Equivalent to XML-based configuration.
 
 
+what is Bean in SpringBoot?
+############################
+In Spring Boot, a Bean is an object that is created, managed, and controlled by the Spring IoC (Inversion of Control) container.
+Why Beans are needed -
+
+Spring manages objects instead of us creating them using new keyword
+Enables Dependency Injection
+Promotes loose coupling
+Improves testability and maintainability
+
 What is @Bean
 #############
 It Used inside @Configuration classes to create custom beans manually.
@@ -352,12 +365,12 @@ This means:
 
 It is used To build REST APIs quickly
 It Automatically converts Java objects → into  JSON using Jackson
-W don't need to write @ResponseBody on every method
-It Ideal for microservices
-
+We don't need to write @ResponseBody on every method
+It Ideal for microservices.
+                           
 Definitions
 ###############
-a. ResponseEntity helps us send both the required HTTP status code and response data (usually in JSON format).
+a. ResponseEntity helps us to send both the required HTTP status code and response data (usually in JSON format).
 
 b. @RequestBody is an annotation in Spring used to bind the HTTP request body (usually in JSON format) to a Java object.
 
@@ -365,6 +378,9 @@ c. @RestController It is used to create RESTful web services that return data in
 
 d. @PostMapping is a Spring MVC annotation used to handle HTTP POST requests.
    It is typically used when you want to submit or create new data, such as inserting a record into the database.
+
+
+
 
 What is Status Code
 ###################
@@ -511,4 +527,104 @@ Why do we use it?
 ✔ To avoid writing XML configuration
 ✔ To auto-detect beans and components
 ✔ To reduce boilerplate code
+
+
+how to exclude in Springboot?
+##############################
+"In Spring Boot, we can exclude auto-configurations using @SpringBootApplication(exclude), exclude dependencies using Maven exclusions, and prevent beans from loading using @ComponentScan exclude filters. This is useful when we want to avoid unwanted auto configuration, resolve dependency conflicts,
+
+
+//Executes for every request passing through the gateway
+//Controls filter execution order
+@Component
+public class JwtAuthenticationFilter implements GlobalFilter, Ordered {
+     //Used to verify JWT signature
+    private static final String SECRET_KEY = "my-super-secret-key";
+
+    // Public endpoints
+    //These APIs do not require JWT
+    //Login & registration must be public
+    private static final List<String> openEndpoints = List.of(
+            "/api/v1/auth/login",
+            "/api/v1/auth/register-admin",
+            "/api/v1/auth/register-user"
+    );
+
+    // Protected endpoint, only ROLE_ADMIN can access
+    private static final Map<String, List<String>> protectedEndpoints =
+            Map.of(
+                    "/api/v1/data", List.of("ROLE_ADMIN") // Microservice1 protected endpoint
+            );
+     
+    
+    //This is the heart of the filter
+    @Override
+    public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
+        
+    	
+    	//Used to check whether endpoint is:Public or Protected
+        String path = exchange.getRequest().getURI().getPath();
+
+        // 1️⃣ Allow public endpoints ✔
+        //If request is for login or registration
+        // Skip JWT validation
+        // Forward request immediately
+        if (openEndpoints.stream().anyMatch(path::startsWith)) {
+            return chain.filter(exchange);
+        }
+
+        // 2️⃣ Token Required  // Check Authorization Header JWT must be sent in:authorization 
+        if (!exchange.getRequest().getHeaders().containsKey(HttpHeaders.AUTHORIZATION)) {
+            return onError(exchange, "Missing Authorization header", HttpStatus.UNAUTHORIZED);
+        }
+
+        String authHeader = exchange.getRequest().getHeaders().getFirst(HttpHeaders.AUTHORIZATION);
+            
+        //Validate Bearer Format ,Prevents invalid headers
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            return onError(exchange, "Invalid Authorization format", HttpStatus.UNAUTHORIZED);
+        }
+         //Extract Token from header and removes Bearer prefix
+        String token = authHeader.substring(7);
+
+        // 3️⃣ Validate jwt token
+        String role;
+        try {
+            role = JWT.require(Algorithm.HMAC256(SECRET_KEY))
+                    .build()
+                    .verify(token)
+                    .getClaim("role")
+                    .asString();
+
+        } catch (Exception e) {
+            return onError(exchange, "Invalid/Expired Token", HttpStatus.UNAUTHORIZED);
+        }
+
+        // 4️⃣ Role-based access check
+        for (String endpoint : protectedEndpoints.keySet()) {
+            if (path.startsWith(endpoint)) {
+
+                List<String> allowedRoles = protectedEndpoints.get(endpoint);
+
+                if (!allowedRoles.contains(role)) {
+                    return onError(exchange, "Access Denied", HttpStatus.FORBIDDEN);
+                }
+            }
+        }
+        //Request forwarded to microservice
+        return chain.filter(exchange);
+    }
+    //Error Handling Method ,401 Unauthorized,403 Forbidden
+    private Mono<Void> onError(ServerWebExchange exchange, String err, HttpStatus status) {
+        exchange.getResponse().setStatusCode(status);
+        return exchange.getResponse().setComplete();
+    }
+     
+    //Runs before most other filters
+    @Override
+    public int getOrder() {
+        return -1;
+    }
+}
+
 
