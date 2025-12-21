@@ -14,6 +14,14 @@ While Java is mainly object-oriented, it still supports primitive data types lik
 Java uses wrapper classes (Integer, Double, Boolean, etc.) and autoboxing/unboxing to bridge primitives with objects, but the presence of primitives means it is not purely object-oriented.
 
 
+why java is platform independent?
+#####################################
+
+Java is platform independent because Java code is compiled into bytecode, not machine-specific code.
+This bytecode runs on the Java Virtual Machine (JVM), which is platform dependent.
+Hence, the same Java program can run on any OS that has a JVM — “Write Once, Run Anywhere.”
+
+
 what is the difference between java 17 and java 8 ? why you choose java 17?
 ##########################################################################
 Java 8 introduced lambdas, Streams, and default methods, while Java 17 (LTS) adds modern features like sealed classes, records, pattern matching, switch expressions, and improved performance and security.
@@ -178,6 +186,13 @@ They are used when frequent string modifications (append, insert, delete) are re
 StringBuffer is thread-safe because its methods are synchronized, which makes it safe to use in multi-threaded environments but slightly slower in performance.
 
 StringBuilder is not thread-safe because it is not synchronized, which makes it faster and suitable for single-threaded scenarios.
+
+
+what is String equals and double equals methods?
+################################################
+“In Java, == compares object references, meaning it checks whether two references point to the same memory location, while equals() compares the actual content of the objects.
+For String, the equals() method is overridden to compare the character values, not the memory address.”
+
 
 
 
@@ -352,6 +367,21 @@ Difference between Interface and Abstract Class
 | Constructor  | ❌ Not allowed                                | ✅ Allowed                                    |
 | Use case     | When multiple classes need the same behavior | When classes share common state and behavior |
 
+
+
+how you decide that you have to use abstract class or interface?
+##############################################################
+
+I use an interface when I need to define a contract that multiple unrelated classes can implement and when flexibility or multiple inheritance is required.
+I use an abstract class when I need to share common behavior or state among related classes.
+In general, I prefer interfaces for design and abstract classes for code reuse.
+
+how do we achieve abstraction?
+#################################
+
+In Java, abstraction is achieved using abstract classes and interfaces.
+Abstract classes hide implementation details while providing partial implementation.
+Interfaces provide complete abstraction by defining only method contracts.
 
 why do we use default method in interface?
 ##########################################

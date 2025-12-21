@@ -4,6 +4,11 @@
 The core idea of Spring is Dependency Injection, which makes your code loosely coupled.
 Spring is lightweight, modular, and provides many ready-made modules like Spring MVC, Spring Data JPA, Spring Security, and Spring Boot, which speed up development.”
 
+what is Spring Principal?
+#############################
+Spring is based on principles like Inversion of Control (IoC), Dependency Injection (DI), Aspect-Oriented Programming (AOP), and loose coupling.
+These principles help in building scalable, maintainable, and testable applications.
+
 
 What is Dependency Injection (DI) ?
 #######################################################
@@ -628,3 +633,141 @@ public class JwtAuthenticationFilter implements GlobalFilter, Ordered {
 }
 
 
+#placed Student
+################
+
+1.what is Singleton class?
+##############################
+
+Ans: A Singleton class is a class for which only one instance is created throughout the application.
+It provides a global point of access to that instance.
+Singleton is commonly used for objects like configuration, logging, database connections, or cache where multiple instances are not required.”
+
+“In Spring Boot, singleton scope is the default scope for beans.
+For example, service and repository beans are singletons, meaning only one instance is created per application context.”
+
+2.What is the Difference between @Autowired & @Beans
+######################################################
+
+“@Autowired is used to inject a bean into another class, 
+ whereas @Bean is used to create and define a bean in the Spring container or inside configuration class.”
+
+
+Is there any other way to resolve bean conflication apart from using @configuration ,@Qualifier?
+##################################################################################################
+“Yes, apart from @Qualifier, we can resolve bean conflicts using @Primary, bean naming, profiles, conditional annotations, and constructor injection with explicit names.”
+
+@primary - It Marks one bean as the default choice.
+
+
+how can you identify performance problem and how to solve it?
+#################################################################
+
+I identify performance problems by monitoring application metrics like response time, CPU, memory, and thread usage using tools such as logs, APM tools, and profilers.
+I analyze slow APIs, database queries, and GC behavior to find bottlenecks.
+To solve them, I optimize queries, add caching, improve code efficiency, and tune JVM or application configurations.
+
+what is springboot dependency ? why we use dependency in SB?
+############################################################
+A Spring Boot dependency is a library added to the project (via Maven or Gradle) that provides specific functionality like web, data access, or security.
+We use dependencies in Spring Boot to avoid writing boilerplate code and to quickly enable features such as REST APIs, database connectivity, or security.
+Spring Boot starters manage compatible versions internally, making application setup faster and simpler.
+
+
+what are the starter dependency in spring boot ? what are the use of starter dependency
+#################################################################################
+
+Spring Boot starter dependencies are pre-configured dependency bundles that include all required libraries to build a specific feature.
+We use starters to avoid manual dependency management and version conflicts, and to enable features quickly with minimal configuration.
+
+Common Spring Boot Starter Dependencies & Uses
+
+spring-boot-starter-web – Build REST APIs and web applications (Spring MVC, Tomcat, Jackson)
+spring-boot-starter-data-jpa – Database access using JPA & Hibernate
+spring-boot-starter-security – Authentication and authorization
+spring-boot-starter-test – Testing support (JUnit, Mockito)
+spring-boot-starter-actuator – Monitoring and health checks
+spring-boot-starter-validation – Bean validation (JSR-380)
+
+Difference between Spring and SpringBoot?
+#########################################
+Spring is a powerful framework but requires manual configuration and setup.
+Spring Boot simplifies Spring by providing auto-configuration and starter dependencies.
+In Spring, we need an external server, while Spring Boot comes with an embedded server like Tomcat.
+Spring Boot reduces boilerplate code and speeds up application development.
+It also provides production-ready features like health checks, metrics, and monitoring.
+
+what is Open Close Principal?
+#################################
+The Open–Closed Principle (OCP) states that a class should be open for extension but closed for modification.
+This means we should be able to add new functionality without changing existing code.
+OCP helps in reducing bugs and makes the system easier to maintain and scale.
+
+Simple example:
+We achieve OCP using interfaces, abstract classes, and polymorphism—for example, adding a new payment method without modifying existing payment logic.
+
+
+what is difference between Rest and Restful?
+################################################
+Here’s a clear, interview-ready explanation of the difference between REST and RESTful 👇
+
+✅ Short Interview Answer (Best)
+
+REST is an architectural style that defines rules for designing web services, while RESTful refers to web services that follow those REST principles.
+🔹 Detailed Explanation
+🔸 REST
+
+It Stands for Representational State Transfer
+It is a set of constraints/principles, not a technology
+It Defines how APIs should be designed (stateless, client-server, cacheable, etc.)
+
+🔸 RESTful
+
+ RESTful service is an implementation of REST
+It Uses proper HTTP methods like GET, POST, PUT, DELETE
+It Returns resource representations (usually JSON/XML)
+
+
+What is the Difference between HTTP and HTTPS
+################################################
+HTTP transfers data in plain text and is not secure.
+HTTPS encrypts data using SSL/TLS for secure communication.
+HTTPS protects data from attackers and ensures authenticity.
+Therefore, HTTPS is used for secure and sensitive applications.
+
+
+
+Difference between @Component and @service?
+############################################
+
+“Both @Component and @Service are Spring stereotypes used to create beans, but @Service is specifically meant for the service layer to represent business logic, while @Component is a generic stereotype  that  Can be used for any Spring-managed component.”
+.
+
+explain Design pattern Solid Principal and Acid properting?
+###########################################################
+Design patterns provide reusable solutions to common design problems.Examples: Singleton, Factory, Observer, Strategy
+SOLID principles help in writing clean, maintainable, and scalable object-oriented code.
+They reduce tight coupling and improve flexibility.
+ACID properties ensure reliable and consistent database transactions.
+Together, they form the foundation of robust enterprise applications.
+
+How to create Singleton class
+################################
+A Singleton class ensures only one instance of a class is created.
+It uses a private constructor and a static method to provide the instance.
+The best implementation is using Enum or Double-Checked Locking.
+
+
+what is Volatile keyword?
+##########################
+It is commonly used in Singleton and multi-threaded applications.
+We use volatile to ensure visibility of changes to a variable across multiple threads.
+It guarantees that when one thread updates a variable, other threads see the latest value immediately.
+
+Spring Boot lifecycle?
+###########################
+Spring Boot starts from the main() method using SpringApplication.run().
+It loads environment configurations and performs auto-configuration.
+Beans are created and dependencies are injected by the Spring container.
+The embedded server starts and the application begins handling requests.
+On shutdown, Spring executes destroy callbacks and releases resources.

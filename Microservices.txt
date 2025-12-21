@@ -15,6 +15,15 @@ Spring Boot provides all the necessary tools and integrations (e.g., REST APIs, 
 4. Easier debugging, testing, and maintenance
 5. Faster time-to-market
 
+What is the lifecycle of Microservices? Design Pattern of Microservices?
+########################################################################
+
+The microservice lifecycle starts from design and development, moves through deployment and operation, and ends with monitoring and scaling.”
+
+Microservice design patterns solve common challenges like communication, scalability, and fault tolerance.
+Common patterns include API Gateway, Service Discovery, Circuit Breaker, and Saga.
+“In my project, we used API Gateway for routing, Feign Client for synchronous communication, Kafka for asynchronous messaging, Saga pattern for transaction consistency, and Circuit Breaker for fault tolerance.”
+
 
 
 🔧 What is a Service Registry in Microservices?(Service-Discovery)
@@ -213,6 +222,20 @@ Where do we call a Feign Client?
 ####################################
 You call a Feign client inside your Service layer of a microservice — usually from:
 ✔ Service class (most common & recommended)
+
+what type of communication is used in Feign Client?
+###################################################
+“Feign Client uses synchronous HTTP-based communication, mainly REST, to communicate between microservices.”
+
+Why Synchronous?
+----> “Because the calling service waits until the called service sends a response.
+This is suitable for request-response type communication.”
+
+🔹 When to Use Feign Client
+
+Service-to-service communication
+CRUD operations
+Real-time request–response flow
 
 
 

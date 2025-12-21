@@ -1,4 +1,6 @@
-An exception-> is an unwanted or unexpected event that occurs during the execution of a program and disrupts the normal flow of the code.
+ Exception
+#############
+-> It is an unwanted or unexpected event that occurs during the execution of a program and disrupts the normal flow of the code.
 It represents an error condition — like dividing by zero, accessing a null object, reading a missing file, etc.
 
 Exception Handling -> in Java is a mechanism that allows developers to handle runtime errors gracefully, ensuring that the program doesn't crash unexpectedly. It helps in maintaining the normal flow of the application, provides meaningful error messages, and separates error-handling logic from the main business logic.
@@ -76,3 +78,37 @@ class AgeException extends Exception {
     }
 }
 
+
+how to create exceptions in java?
+#####################################
+“In Java, we create custom exceptions by extending Exception for checked exceptions or RuntimeException for unchecked exceptions. 
+ 
+In Spring Boot, we usually use unchecked exceptions along with @ControllerAdvice and @ExceptionHandler to handle them globally.”
+
+
+
+how many try and catch we can write in one problem?
+###################################################
+“There is no fixed limit. We can write multiple try-catch blocks in a program.
+Inside a single try block, we can also have multiple catch blocks to handle different exceptions.”
+
+“Although Java allows multiple try-catch blocks, in real projects we avoid excessive try-catch and prefer global exception handling (like @ControllerAdvice in Spring Boot) to keep code clean.”
+
+When we get NullPointerException?
+###################################
+“A NullPointerException occurs when we try to access or operate on an object reference that is null.
+In other words, the variable is not pointing to any object, but we are trying to use it.”  
+To avoid this we use Optional and  custom exceptions like ResourceNotFoundException.”
+
+How you handle Exceptions in SpringBoot?
+#########################################
+In Spring Boot, we handle exceptions using centralized exception handling.
+We create custom exceptions and handle them globally using @RestControllerAdvice with @ExceptionHandler.
+This allows us to return proper HTTP status codes and meaningful error responses instead of stack traces.
+
+Explain try-catch-finally
+###########################
+“In Java, try–catch–finally is used for exception handling.
+The code that may cause an exception is written inside the try block.
+If an exception occurs, it is handled in the corresponding catch block.
+The finally block always executes, whether an exception occurs or not, and is mainly used for resource cleanup like closing files or database connections.”
