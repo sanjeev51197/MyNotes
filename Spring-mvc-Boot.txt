@@ -252,3 +252,13 @@ What is Spring Initializr?
 Spring Initializr is an online tool provided by Spring (https://start.spring.io/
 ) that helps developers quickly generate a Spring Boot project with all required dependencies.
 
+
+What is Maven ? Why we use it?
+##############################
+Maven is a project management and build tool used to manage dependencies, compile code, run tests, and build JAR/WAR files.
+It uses POM.xml to configure everything and follows a build lifecycle like clean, compile, test, package, install, and deploy.
+
+how do you create a jar file? how do you run a jar file?
+############################################################
+We can create a JAR file using Maven by running the mvn clean package command. Maven will compile the code and generate a JAR inside the target folder based on the configuration in the pom.xml.
+ I run it using java -jar filename.jar 
