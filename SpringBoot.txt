@@ -1,0 +1,531 @@
+
+What is Spring boot
+################################
+
+Spring Boot is an open-source Java-based framework used to create stand-alone applications quickly and easily with minimal configuration.
+
+Spring Boot Stand-Alone Application:
+-------------------------------------------
+-> You just run a main() method like any regular Java program.
+-> It includes an embedded server (e.g., Tomcat) in the application itself.
+-> No need to install or configure any external server separately.
+
+Note: Since Spring boot is stand alone application, we package the application as jar file
+
+
+Spring Boot Workflow (Short Answer)
+#####################################
+You run the Spring Boot app → main() executes
+SpringApplication.run() starts the Spring context
+Auto-configuration configures beans
+Embedded Tomcat starts
+Your controllers/services/repos load
+Application becomes ready to receive requests
+
+
+
+ What is @Service?
+######################
+a. @Service is a Spring stereotype annotation.
+b. It marks a class as a Service component in the Service Layer of your application.
+c. Spring will detect it during component scanning and create an instance (bean) of that class in the Spring IOC container
+d. It makes your class eligible for dependency injection.
+
+ What is @Component?
+####################
+a. @Component is a generic Spring annotation to mark a class as a Spring-managed bean.
+b. When you annotate a class with @Component, Spring will detect it during component scanning and create an instance (bean) of that class in the Spring IOC container.
+c. It makes your class eligible for dependency injection.
+
+
+what is @SpringBootApplication
+##############################
+It is the Main annotation used to mark the entry point of a Spring Boot application.
+It is a combination of: @Configuration ,@EnableAutoConfiguration and @ComponentScan
+Purpose:
+It Starts auto-configuration, component scanning, and bootstraps the app.
+
+
+What is @Configuration
+################
+It Marks a class that contains bean definitions. It Equivalent to XML-based configuration.
+
+
+what is Bean in SpringBoot?
+############################
+In Spring Boot, a Bean is an object that is created, managed, and controlled by the Spring IoC (Inversion of Control) container.
+Why Beans are needed -
+
+Spring manages objects instead of us creating them using new keyword
+Enables Dependency Injection
+Promotes loose coupling
+Improves testability and maintainability
+
+What is @Bean
+#############
+It Used inside @Configuration classes to create custom beans manually.
+
+
+What is @Repository
+#####################
+It Marks a class as DAO (Data Access Layer).
+
+
+What is a Web Service?
+########################
+A Web Service is a software component that allows two applications to communicate with each other over a network (like the Internet) using standard protocols.  It enables machine-to-machine communication.
+Example:
+A mobile app calling a server to get user details
+A billing system communicating with an order system
+
+
+
+1. SOAP Web Services (Simple Object Access Protocol)
+###################################################
+SOAP is a protocol that uses XML for data exchange and follows strict standards for communication. Often used in banking, telecom, enterprise systems.
+
+
+2. RESTful Web Services (Representational State Transfer)
+##########################################################
+REST is an architectural style for building lightweight web services that use HTTP methods (GET, POST, PUT, DELETE) to perform CRUD operations.
+Features-
+Uses JSON (mostly), also XML
+Lightweight and fast
+Best suited for web, mobile apps, and microservices
+
+
+
+Simple Definition
+##################
+Web Service is a mechanism that enables communication between applications over a network. There are two types: SOAP (protocol-based) and REST (architecture-based). RESTful web services are lightweight, fast, stateless services that use HTTP methods and usually return JSON data.
+
+
+
+What is @RestController in Spring Boot?
+########################################
+@RestController is a Spring annotation that is used to create RESTful web services that return data in JSON format
+
+It is a combination of:  @Controller  and  @ResponseBody
+
+This means:
+✔ It handles HTTP requests (GET, POST, PUT, DELETE)
+✔ It returns data (JSON/XML) directly to the client
+✔ No need to return a view (HTML/JSP)
+🧠 Why do we use @RestController?
+
+It is used To build REST APIs quickly
+It Automatically converts Java objects → into  JSON using Jackson
+We don't need to write @ResponseBody on every method
+It Ideal for microservices.
+
+
+                           
+Definitions
+###############
+a. ResponseEntity helps us to send both the required HTTP status code and response data (usually in JSON format).
+
+b. @RequestBody is an annotation in Spring used to bind the HTTP request body (usually in JSON format) to a Java object.
+
+c. @RestController It is used to create RESTful web services that return data in JSON format
+
+d. @PostMapping is a Spring MVC annotation used to handle HTTP POST requests.
+   It is typically used when you want to submit or create new data, such as inserting a record into the database.
+
+
+
+What is Status Code
+###################
+Status codes in Spring Boot are HTTP response codes (like 200, 400, 404, 500) sent by the server to indicate success, client error, or server error in a request.
+
+Status Code: 201 It  indicates that a resource has been successfully created as a result of a POST request.
+
+Status Code: 200 – OK --> means The request was successful, and the server has returned the expected response.
+
+Status Code: 404 – Not Found --> means The resource the client is trying to access does not exist on the server.
+
+Status Code : 500 – Internal Server Error  means --> The server encountered an unexpected error while processing the request.
+Causes:
+NullPointerException
+Database connection error
+
+Status Code : 403 – Forbidden  --> means The server understood the request, the resource exists, but the client is not allowed to access it. because User does NOT have required permissions 
+This is an authorization error, not an authentication error. 
+
+
+What is Spring Boot @Value Annotation?
+#########################################
+“@Value is a Spring annotation used to inject values into fields — such as properties from application.properties, environment variables, system properties, or even literal values.
+
+ex- Inject from application.properties             
+
+@Value("${app.name}")                               
+private String appName;  
+
+Inject a hard-coded value
+@Value("Hello World")
+private String msg;
+
+
+What is the difference between PUT and PATCH
+############################################
+PUT and PATCH are HTTP methods used for updating resources in REST APIs, but they work differently.
+
+PUT is used for a full update.
+When we use PUT, we send the entire object, and the server replaces the existing data completely with the new one.
+That means if any field is missing in the request body, it may be overwritten or set to null.
+
+PATCH is used for a partial update.
+With PATCH, we only send the fields we want to change, and the server updates only those specific values, leaving the remaining data unchanged.
+
+
+What is @Qualifier in Spring?
+###############################
+@Qualifier is used in Spring to resolve ambiguity when more than one bean of the same type exists. It tells Spring which specific bean to inject when multiple choices are available.
+
+
+What is Postman?
+################
+Postman is a popular API testing tool used to send requests and receive responses from REST APIs.
+It helps developers test APIs without writing any front-end code. 
+To access swagger use swagger dependencies and hit http://localhost:8080/swagger-ui.html
+
+
+What is Swagger?
+################
+Swagger is a tool used to document, test, and interact with REST APIs.
+In Spring Boot, Swagger helps developers and testers view all APIs in a clean UI and test them without Postman. 
+
+
+What is Idempotent?
+####################
+Idempotent means:  An operation that gives the same result, no matter how many times you repeat it.
+
+In REST APIs, an HTTP method is idempotent if calling it once or multiple times produces the same effect on the server.
+GET method ,PUT METHOD , DELETE are idempotent method but POST is non-idempotent because calling multiple times it produces multiple record.
+
+
+What is Spring Boot Actuator?
+#############################
+Spring Boot Actuator is a built-in module in Spring Boot that provides production-ready monitoring and management features for your application.
+It helps DevOps, developers, and monitoring tools understand the app’s status.
+It provides REST endpoints to monitor, manage, and get diagnostic information about your Spring Boot application in real time.
+
+
+
+What is application.properties in Spring Boot?
+#############################################
+application.properties (or application.yml) is the main configuration file in a Spring Boot application.
+
+It is used to configure application-level settings such as: Server port ,Database connection ,Logging ,Profiles ,Security
+Spring Boot automatically reads this file at startup.
+
+
+
+XML vs JSON
+###############
+XML is a tag-based structured format suitable for complex data and used in SOAP-based web services.
+JSON is a lightweight, fast, and easy-to-read format widely used in REST APIs for data exchange.
+
+
+
+How to Send Email in Spring Boot?
+#################################
+To send an email in Spring Boot, we use the spring-boot-starter-mail dependency. It provides JavaMailSender, which allows us to send simple and MIME emails using SMTP configuration.
+
+Email Configuration in application.properties
+For example (Gmail SMTP):
+
+spring.mail.host=smtp.gmail.com
+spring.mail.port=587
+spring.mail.username=yourgmail@gmail.com
+spring.mail.password=your-app-password
+spring.mail.properties.mail.smtp.auth=true
+spring.mail.properties.mail.smtp.starttls.enable=true
+
+Note: Use App Password, not your Gmail login password
+
+How do we use Global Exception Handling in Spring Boot?
+########################################################
+In Spring Boot, Global Exception Handling allows you to handle all exceptions in one centralized place instead of writing try–catch in every controller.
+We use @ControllerAdvice + @ExceptionHandler to achieve this.
+
+
+When do we use @Valid in Spring Boot?
+######################################
+We use @Valid when we want to perform validation on incoming data (usually request body or form input) before processing it.
+Spring Boot will automatically check all validation rules (like @NotNull, @Email, @Size, etc.) inside your DTO.
+
+What happens when validation fails?   --->   Spring returns a 400 Bad Request with validation error messages.
+
+Where can @Valid be applied?
+#############################
+| Where?           | Example                              |
+| ---------------- | ------------------------------------ |
+| Request Body     | `@Valid @RequestBody UserDTO`        |
+| Path Variable    | `@Valid @PathVariable`               |
+| Query Parameter  | `@Valid @RequestParam`               |
+| Method arguments | `public void save(@Valid User user)` |
+
+
+What does @SpringBootApplication do?
+####################################
+@SpringBootApplication is a combination of three important Spring annotations:
+✅ @Configuration - It Marks the class as a configuration class where Spring can define beans.
+
+✅ @EnableAutoConfiguration -
+
+Enables Spring Boot’s auto-configuration, which automatically configures beans based on dependencies in the classpath.
+(Example: If spring-boot-starter-web is present → Spring auto-configures DispatcherServlet, Tomcat, JSON converters, etc.)
+
+✅ @ComponentScan -  Enables component scanning so Spring can detect:
+
+@Controller
+@Service
+@Repository
+
+Why do we use it?
+#################
+✔ To start Spring Boot application
+✔ To enable auto configuration
+✔ To avoid writing XML configuration
+✔ To auto-detect beans and components
+✔ To reduce boilerplate code
+
+
+how to exclude in Springboot?
+##############################
+"In Spring Boot, we can exclude auto-configurations using @SpringBootApplication(exclude), exclude dependencies using Maven exclusions, and prevent beans from loading using @ComponentScan exclude filters. This is useful when we want to avoid unwanted auto configuration, resolve dependency conflicts,
+
+
+//Executes for every request passing through the gateway
+//Controls filter execution order
+@Component
+public class JwtAuthenticationFilter implements GlobalFilter, Ordered {
+     //Used to verify JWT signature
+    private static final String SECRET_KEY = "my-super-secret-key";
+
+    // Public endpoints
+    //These APIs do not require JWT
+    //Login & registration must be public
+    private static final List<String> openEndpoints = List.of(
+            "/api/v1/auth/login",
+            "/api/v1/auth/register-admin",
+            "/api/v1/auth/register-user"
+    );
+
+    // Protected endpoint, only ROLE_ADMIN can access
+    private static final Map<String, List<String>> protectedEndpoints =
+            Map.of(
+                    "/api/v1/data", List.of("ROLE_ADMIN") // Microservice1 protected endpoint
+            );
+     
+    
+    //This is the heart of the filter
+    @Override
+    public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
+        
+    	
+    	//Used to check whether endpoint is:Public or Protected
+        String path = exchange.getRequest().getURI().getPath();
+
+        // 1️⃣ Allow public endpoints ✔
+        //If request is for login or registration
+        // Skip JWT validation
+        // Forward request immediately
+        if (openEndpoints.stream().anyMatch(path::startsWith)) {
+            return chain.filter(exchange);
+        }
+
+        // 2️⃣ Token Required  // Check Authorization Header JWT must be sent in:authorization 
+        if (!exchange.getRequest().getHeaders().containsKey(HttpHeaders.AUTHORIZATION)) {
+            return onError(exchange, "Missing Authorization header", HttpStatus.UNAUTHORIZED);
+        }
+
+        String authHeader = exchange.getRequest().getHeaders().getFirst(HttpHeaders.AUTHORIZATION);
+            
+        //Validate Bearer Format ,Prevents invalid headers
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            return onError(exchange, "Invalid Authorization format", HttpStatus.UNAUTHORIZED);
+        }
+         //Extract Token from header and removes Bearer prefix
+        String token = authHeader.substring(7);
+
+        // 3️⃣ Validate jwt token
+        String role;
+        try {
+            role = JWT.require(Algorithm.HMAC256(SECRET_KEY))
+                    .build()
+                    .verify(token)
+                    .getClaim("role")
+                    .asString();
+
+        } catch (Exception e) {
+            return onError(exchange, "Invalid/Expired Token", HttpStatus.UNAUTHORIZED);
+        }
+
+        // 4️⃣ Role-based access check
+        for (String endpoint : protectedEndpoints.keySet()) {
+            if (path.startsWith(endpoint)) {
+
+                List<String> allowedRoles = protectedEndpoints.get(endpoint);
+
+                if (!allowedRoles.contains(role)) {
+                    return onError(exchange, "Access Denied", HttpStatus.FORBIDDEN);
+                }
+            }
+        }
+        //Request forwarded to microservice
+        return chain.filter(exchange);
+    }
+    //Error Handling Method ,401 Unauthorized,403 Forbidden
+    private Mono<Void> onError(ServerWebExchange exchange, String err, HttpStatus status) {
+        exchange.getResponse().setStatusCode(status);
+        return exchange.getResponse().setComplete();
+    }
+     
+    //Runs before most other filters
+    @Override
+    public int getOrder() {
+        return -1;
+    }
+}
+
+
+#placed Student
+################
+
+1.what is Singleton class?
+##############################
+
+Ans: A Singleton class is a class for which only one instance is created throughout the application.
+It provides a global point of access to that instance.
+Singleton is commonly used for objects like configuration, logging, database connections, or cache where multiple instances are not required.”
+
+“In Spring Boot, singleton scope is the default scope for beans.
+For example, service and repository beans are singletons, meaning only one instance is created per application context.”
+
+2.What is the Difference between @Autowired & @Beans
+######################################################
+
+“@Autowired is used to inject a bean into another class, 
+ whereas @Bean is used to create and define a bean in the Spring container or inside configuration class.”
+
+
+Is there any other way to resolve bean conflication apart from using @configuration ,@Qualifier?
+##################################################################################################
+“Yes, apart from @Qualifier, we can resolve bean conflicts using @Primary, bean naming, profiles, conditional annotations, and constructor injection with explicit names.”
+
+@primary - It Marks one bean as the default choice.
+
+
+how can you identify performance problem and how to solve it?
+#################################################################
+
+I identify performance problems by monitoring application metrics like response time, CPU, memory, and thread usage using tools such as logs, APM tools, and profilers.
+I analyze slow APIs, database queries, and GC behavior to find bottlenecks.
+To solve them, I optimize queries, add caching, improve code efficiency, and tune JVM or application configurations.
+
+what is springboot dependency ? why we use dependency in SB?
+############################################################
+A Spring Boot dependency is a library added to the project (via Maven or Gradle) that provides specific functionality like web, data access, or security.
+We use dependencies in Spring Boot to avoid writing boilerplate code and to quickly enable features such as REST APIs, database connectivity, or security.
+Spring Boot starters manage compatible versions internally, making application setup faster and simpler.
+
+
+what are the starter dependency in spring boot ? what are the use of starter dependency
+#################################################################################
+
+Spring Boot starter dependencies are pre-configured dependency bundles that include all required libraries to build a specific feature.
+We use starters to avoid manual dependency management and version conflicts, and to enable features quickly with minimal configuration.
+
+Common Spring Boot Starter Dependencies & Uses
+
+spring-boot-starter-web – Build REST APIs and web applications (Spring MVC, Tomcat, Jackson)
+spring-boot-starter-data-jpa – Database access using JPA & Hibernate
+spring-boot-starter-security – Authentication and authorization
+spring-boot-starter-test – Testing support (JUnit, Mockito)
+spring-boot-starter-actuator – Monitoring and health checks
+spring-boot-starter-validation – Bean validation (JSR-380)
+
+Difference between Spring and SpringBoot?
+#########################################
+Spring is a powerful framework but requires manual configuration and setup.
+Spring Boot simplifies Spring by providing auto-configuration and starter dependencies.
+In Spring, we need an external server, while Spring Boot comes with an embedded server like Tomcat.
+Spring Boot reduces boilerplate code and speeds up application development.
+It also provides production-ready features like health checks, metrics, and monitoring.
+
+what is Open Close Principal?
+#################################
+The Open–Closed Principle (OCP) states that a class should be open for extension but closed for modification.
+This means we should be able to add new functionality without changing existing code.
+OCP helps in reducing bugs and makes the system easier to maintain and scale.
+
+Simple example:
+We achieve OCP using interfaces, abstract classes, and polymorphism—for example, adding a new payment method without modifying existing payment logic.
+
+
+what is difference between Rest and Restful?
+################################################
+Here’s a clear, interview-ready explanation of the difference between REST and RESTful 👇
+
+✅ Short Interview Answer (Best)
+
+REST is an architectural style that defines rules for designing web services, while RESTful refers to web services that follow those REST principles.
+🔹 Detailed Explanation
+🔸 REST
+
+It Stands for Representational State Transfer
+It is a set of constraints/principles, not a technology
+It Defines how APIs should be designed (stateless, client-server, cacheable, etc.)
+
+🔸 RESTful
+
+ RESTful service is an implementation of REST
+It Uses proper HTTP methods like GET, POST, PUT, DELETE
+It Returns resource representations (usually JSON/XML)
+
+
+What is the Difference between HTTP and HTTPS
+################################################
+HTTP transfers data in plain text and is not secure.
+HTTPS encrypts data using SSL/TLS for secure communication.
+HTTPS protects data from attackers and ensures authenticity.
+Therefore, HTTPS is used for secure and sensitive applications.
+
+
+
+Difference between @Component and @service?
+############################################
+
+“Both @Component and @Service are Spring stereotypes used to create beans, but @Service is specifically meant for the service layer to represent business logic, while @Component is a generic stereotype  that  Can be used for any Spring-managed component.”
+.
+
+explain Design pattern Solid Principal and Acid properting?
+###########################################################
+Design patterns provide reusable solutions to common design problems.Examples: Singleton, Factory, Observer, Strategy
+SOLID principles help in writing clean, maintainable, and scalable object-oriented code.
+They reduce tight coupling and improve flexibility.
+ACID properties ensure reliable and consistent database transactions.
+Together, they form the foundation of robust enterprise applications.
+
+How to create Singleton class
+################################
+A Singleton class ensures only one instance of a class is created.
+It uses a private constructor and a static method to provide the instance.
+The best implementation is using Enum or Double-Checked Locking.
+
+
+what is Volatile keyword?
+##########################
+It is commonly used in Singleton and multi-threaded applications.
+We use volatile to ensure visibility of changes to a variable across multiple threads.
+It guarantees that when one thread updates a variable, other threads see the latest value immediately.
+
+Spring Boot lifecycle?
+###########################
+Spring Boot starts from the main() method using SpringApplication.run().
+It loads environment configurations and performs auto-configuration.
+Beans are created and dependencies are injected by the Spring container.
+The embedded server starts and the application begins handling requests.
+On shutdown, Spring executes destroy callbacks and releases resources.

@@ -6,14 +6,16 @@ Hibernate
 It eliminates boilerplate JDBC code and provides features like caching, lazy loading, and HQL.
 
 Why We Use Hibernate?
-#############################
-JDBC Problems
+#####################
+JDBC Problems - 
 
 ❌ Too much boilerplate code
 ❌ Need to write SQL manually
 ❌ Difficult transaction management
 ❌ No caching
-❌ Hard to maintain
+❌ Hard to maintain   
+
+                 
 
 Hibernate Solutions ->
 
@@ -34,8 +36,6 @@ Hibernate is more powerful than JDBC because it reduces boilerplate code, handle
 JPA (Java Persistence API) is only a specification — meaning it is a set of interfaces and incomplete annotations.
 JPA is a Java specification that defines how to map Java objects to database tables and how to manage data in a relational database using object-oriented concepts.
 JPA itself does not provide implementation. It only defines interfaces and rules.
-
-The Implementation of JPA is done in hibernate and other ORM tools like EclipseLink, OpenJPA, DataNucleus
 
 
 What is the difference between JPA and Hibernate?
@@ -163,7 +163,7 @@ So in short, get() is eager and safe, while load() is lazy and performance-optim
 
 How to integrate Hibernate in your project?
 ###########################################
-I followed these steps to integrate hibernate in my prject
+I followed these steps to integrate hibernate in my project
 “Add dependencies → configure Hibernate → create entity classes → build SessionFactory → use Session for CRUD with transactions.”
 
 
@@ -281,10 +281,10 @@ ex -Employee e = new Employee();
 Object is associated with a Hibernate Session. Hibernate tracks changes and automatically updates the DB (dirty checking).
 
 Achieved when calling:                ex- session.save(e);  // Now e is persistent
-save()
+save() 
 persist()
-saveOrUpdate()
-
+saveOrUpdate().    
+               
 3. Detached State ->
 Object was persistent earlier but Session is closed.
 Object still exists in memory, but Hibernate no longer tracks changes.
@@ -356,5 +356,10 @@ Optional class:
 ----------------
 -> Optional class was introduced in java version 8
 -> It is alternate way to handle null pointer exception
+
+what is Cascade ?
+##################
+Cascade in Hibernate/JPA means applying the same operation from a parent entity to its related child entities automatically.
+Example: If you save, update, or delete the parent, the child will also be saved/updated/deleted based on the cascade type.
 
 
