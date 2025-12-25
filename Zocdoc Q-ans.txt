@@ -495,3 +495,50 @@ Resilience4j provided resilience patterns like CircuitBreaker, Retry, RateLimite
 With Circuit Breaker, if a downstream service was slow or failed, the call would open the breaker and return a fallback response instead of crashing the system.
 This improved reliability, reduced downtime, and protected other services from failure chain reactions.
 
+What unit tests did you write using JUnit and Mockito?
+######################################################
+I wrote unit tests for all service-level business logic using JUnit and Mockito.
+
+Booking Service: validate doctor availability, mock Feign client calls, check booking creation, and payment status updates.
+
+Doctor Service: test profile creation, updates, Redis caching logic, and S3 file URL handling.
+
+Patient Service: test registration, medical report upload (mock S3), and profile retrieval.
+
+Payment Service: mock Stripe session creation, payment callbacks, and booking confirmation via Feign client.
+
+Notification Service: test Kafka consumers and mocked email/SMS notifications.
+
+
+How did you test services interacting with external APIs or Kafka?
+#######################################################################
+answer: I mocked Feign client calls for service-to-service communication.
+I mocked Stripe SDK to simulate payment session creation and callbacks.
+For Kafka, I mocked producer/consumer behavior to ensure events were published and consumed correctly without relying on a real Kafka broker.
+
+How do you ensure booking/payment flows are correctly tested?
+
+answer :I tested the entire booking flow: doctor selection → slot validation → booking creation → payment processing → Kafka event → notification.
+
+Used Mockito to simulate external dependencies and assertions to validate the status transitions.
+
+Verified edge cases like double-booking prevention and payment failures.
+
+
+
+How your Payment-service works?
+ans-
+Booking Service calls Payment Service, which creates a Stripe PaymentIntent.
+Stripe returns: payment URL and paymentIntentId
+The patient is redirected to Stripe to complete payment securely.
+
+“When a patient completes the Stripe checkout, Stripe redirects to my /success endpoint with session_id and bookingId.
+Inside /success, I retrieve the Stripe session using the session ID and check if the payment status is ‘paid’.
+
+If payment is successful, I call Booking Service using a Feign client and update the booking status to CONFIRMED.
+If payment fails or is cancelled, the system returns the appropriate message and the booking remains in PENDING state.
+
+This ensures the booking is confirmed only after the Stripe payment is truly successful.”
+
+
+
