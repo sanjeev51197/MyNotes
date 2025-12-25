@@ -352,8 +352,6 @@ public class Order {
 
 What is Optional class?
 ##########################
-Optional class:
-----------------
 -> Optional class was introduced in java version 8
 -> It is alternate way to handle null pointer exception
 
@@ -362,4 +360,14 @@ what is Cascade ?
 Cascade in Hibernate/JPA means applying the same operation from a parent entity to its related child entities automatically.
 Example: If you save, update, or delete the parent, the child will also be saved/updated/deleted based on the cascade type.
 
+what is JPQL
+############
+JPQL is an object-oriented query language in JPA/Hibernate that works on entity classes and their fields, not on database tables and columns.
+Example JPQL Query-
+@Query("SELECT u FROM User u WHERE u.email = :email")
+User findByEmail(String email);
+
+How pagination works in Hibernate?
+##################################
+Hibernate pagination works using setFirstResult(offset) and setMaxResults(limit) to fetch records page-by-page instead of loading everything at once.
 
