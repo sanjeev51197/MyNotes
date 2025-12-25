@@ -134,6 +134,16 @@ The PC register stores the address of the currently executing instruction for ea
 This memory area is used to store information related to native methods written in languages like C or C++.
 
 
+What is Package in Java? why we use?
+#####################################
+A package in Java is basically a folder (namespace) that is used to group related classes, interfaces, and sub-packages together.
+It helps in organizing code, avoiding name conflicts, and providing access control.
+
+Package is of Two types 
+1. Built in Package (which is already present in java)    - java.util ,  java.io , java.lang   etc
+2. Pre-Defined Package (It is created by the programmer)   -com.psa.entity ,com.psa.service etc
+
+
 what is Constant Pool?
 #########################
 The Constant Pool is a memory area inside the Method Area that stores constants such as string literals, class names, method names, and primitive constant values. The String Constant Pool is a special part of this area that allows reuse of String objects, improving memory efficiency and performance.
@@ -161,12 +171,13 @@ Difference between Static and Non-Static
 | Belongs to      | Class                          | Object                           |
 | Memory          | One copy shared by all objects | Separate copy for each object    |
 | Access          | Accessed using class name      | Accessed using object reference  |
-| Object required | ❌ No                           | ✅ Yes                            |
+| Object required | ❌ No                           | ✅ Yes                         |
 | Lifetime        | Loaded when class is loaded    | Created when object is created   |
 | Usage           | Common/shared data or behavior | Object-specific data or behavior |
 
 
 #What is intern() in Java?
+###########################
 intern() adds the String to the String Constant Pool (SCP) and returns the reference of the pooled string.
 
 If the string already exists in the pool → then it returns existing reference
@@ -174,6 +185,7 @@ If it does not exist → adds it to the pool and returns it
 
 
 what is String Why it is Immuatble?
+###################################
 ans: String is a final class in java.lang used to represent a sequence of characters. Once a String object is created, its value cannot be changed.
 Any modification done it creates a new String object.
 String is immutable in Java to ensure security, thread safety, and efficient memory management. Immutability prevents unintended modifications, supports the String constant pool for memory efficiency, and ensures that Strings are thread-safe and reliable as keys in collections.
@@ -194,9 +206,6 @@ what is String equals and double equals methods?
 For String, the equals() method is overridden to compare the character values, not the memory address.”
 
 
-
-
-
 What is a Constructor?
 ######################
 
@@ -207,6 +216,37 @@ What is Constructor Overloading?
 ################################
 Constructor overloading means having multiple constructors in the same class with different parameter lists. It allows creating objects in different ways by passing different sets of values while creating the object.
 
+write a program for constructor Overloading -
+#############################################
+
+class Student {
+    int id;
+    String name;
+
+    // Constructor 1
+    Student() {
+        System.out.println("Default Constructor");
+    }
+
+    // Constructor 2
+    Student(int id) {
+        this.id = id;
+        System.out.println("ID: " + id);
+    }
+
+    // Constructor 3
+    Student(int id, String name) {
+        this.id = id;
+        this.name = name;
+        System.out.println("ID: " + id + ", Name: " + name);
+    }
+
+    public static void main(String[] args) {
+        Student s1 = new Student();
+        Student s2 = new Student(101);
+        Student s3 = new Student(102, "Rahul");
+    }
+}
 
 What is Constructor Chaining?
 #############################
@@ -215,6 +255,25 @@ Constructor chaining is the process of calling one constructor from another cons
 Interview tip:
 Constructor overloading provides flexibility, while constructor chaining avoids code duplication and ensures proper object initialization.
 ---> A child class can call a parent class constructor using super().
+
+write a program to show constructor chaining
+############################################
+class Demo {
+    Demo() {
+        this(10);               // calling parameterized constructor
+        System.out.println("Default Constructor");
+    }
+
+    Demo(int a) {
+        System.out.println("Parameterized Constructor: " + a);
+    }
+
+    public static void main(String[] args) {
+      Demo demo=new Demo();
+    }
+}
+
+
 
 what is Default Constructor?
 #############################
@@ -258,10 +317,10 @@ What is a Method?
 A method in Java is a block of code that performs a specific task. It contains a method name, return type, parameters (optional), and a body, and it is used to define the behavior of a class. Methods help in code reusability, readability, and modularity.
 
 
-
 What is Method Overloading?
 ###########################
 Method overloading means defining multiple methods with the same name in the same class but with different parameter lists (different type, number, or order of parameters). It is a compile-time polymorphism feature and improves code readability
+
 
 
 What is Method Overriding?
@@ -291,10 +350,6 @@ equals() method compares the content or logical equality of objects. Many classe
 
 
 
-
-
-
-
 What do you mean by OOPS?
 ##########################
 OOPs (Object-Oriented Programming) is a programming paradigm that organizes software design around objects rather than functions. An object represents a real-world entity and contains both data (variables) and behavior (methods). OOPs is based on the principles of encapsulation, abstraction, inheritance, and polymorphism, which help in building reusable, secure, and maintainable applications.
@@ -312,12 +367,13 @@ Polymorphism – The ability of an object to take many forms. It is achieved thr
 
 
 what is Class?
+##############
 
 A class is a blueprint or template that defines the structure and behavior of objects. It contains fields (variables) and methods (functions) that represent the properties and behaviors of real-world entities.
 
 
 what is Object?
-
+###############
 An object is a real-world instance of a class. It has its own copy of the class variables and can call the class methods. Objects are created using the new keyword.
 
 
@@ -334,6 +390,27 @@ Multiple Inheritance (via Interface) – A class can implement multiple interfac
 
 ❌ Java does not support multiple inheritance using classes.
 
+#Write a PROGRAM for inheritance
+################################
+
+class Parent {
+    void display() {
+        System.out.println("I am Parent");
+    }
+}
+class Child extends Parent {
+    void show() {
+        System.out.println("I am Child");
+    }
+}
+public class Test {
+    public static void main(String[] args) {
+        Child c = new Child();
+        c.display(); // Parent method
+        c.show();    // Child method
+    }
+}
+
 
 Why Java Does Not Support Multiple Inheritance (with classes)?
 ##############################################################
@@ -341,6 +418,33 @@ Why Java Does Not Support Multiple Inheritance (with classes)?
 Java does not support multiple inheritance with classes to avoid ambiguity and complexity, especially the Diamond Problem. When two parent classes have the same method, the compiler cannot decide which method the child class should inherit. This leads to confusion and unreliable behavior.
 
 To solve this, Java allows multiple inheritance through interfaces, where method conflicts are explicitly resolved by the implementing class.
+
+#Write a program to show how java achieve multiple inheritance using interface
+##############################################################################
+interface A {
+    void show();
+}
+
+interface B {
+    void display();
+}
+
+class C implements A, B {                                 // Class implementing two interfaces (multiple inheritance)
+    public void show() {
+        System.out.println("From Interface A");
+    }
+    public void display() {
+        System.out.println("From Interface B");
+    }
+}
+
+public class MultipleInheritanceExample {
+    public static void main(String[] args) {
+        C obj = new C();
+        obj.show();
+        obj.display();
+    }
+}
 
 
 what is interface ?
@@ -350,9 +454,76 @@ An interface in Java is a blueprint of a class that defines a contract by declar
 A class implements an interface using the implements keyword and must provide implementations for all its abstract methods. Interfaces help in loose coupling, scalability, and flexible design.
 
 
+#Write a simple program for an Interface
+########################################
+interface Vehicle {
+    void start();    // abstract method
+}
+class Car implements Vehicle {                         
+
+    public void start() {
+        System.out.println("Car engine started...");
+    }
+}
+class Bike implements Vehicle {
+    public void start() {
+        System.out.println("Bike engine started...");
+    }
+}
+public class InterfaceExample {
+    public static void main(String[] args) {
+        Vehicle car = new Car();
+        Vehicle bike = new Bike();
+
+        car.start();
+        bike.start();
+    }
+}
+
+
+
 what is Abstract Class ?
 ########################
-An abstract class is a class that cannot be instantiated and is used to provide partial implementation and common behavior to its child classes.
+“An abstract class is partially implemented. It can have both abstract and concrete methods.
+Child classes must implement the abstract methods to complete the behavior.”
+
+
+Write a program for Abstract Class
+#####################################
+
+abstract class Animal {
+    
+    abstract void sound();                                                          // // Abstract method (no body)
+
+    
+    void sleep() {                                                                   //// Concrete method (with body)
+        System.out.println("Animal is sleeping...");
+    }
+}
+class Dog extends Animal {
+    void sound() {
+        System.out.println("Dog barks: Woof Woof");
+    }
+}
+
+// Child class 2
+class Cat extends Animal {
+    void sound() {
+        System.out.println("Cat meows: Meow Meow");
+    }
+}
+public class AbstractExample {
+    public static void main(String[] args) {
+        Animal dog = new Dog();
+        Animal cat = new Cat();
+
+        dog.sound();
+        dog.sleep();
+
+        cat.sound();
+        cat.sleep();
+    }
+}
 
 
 Difference between Interface and Abstract Class
@@ -396,6 +567,46 @@ what is Marker interface?
 ##########################
 A marker interface is an empty interface in Java that does not contain any methods. It is used to mark a class and provide metadata to the JVM or framework so that special behavior can be applied to that class. Examples include Serializable, Cloneable, and RandomAccess.
 
+
+
+write a program to show Polymerphism
+######################################
+class Animal {
+    void sound() {
+        System.out.println("Animal makes a sound");
+    }
+}
+
+class Dog extends Animal {
+    void sound() {
+        System.out.println("Dog barks");
+    }
+}
+
+class Cat extends Animal {
+    void sound() {
+        System.out.println("Cat meows");
+    }
+}
+
+public class PolymorphismExample {                      //polymorphism means one reference ,many forms achived through method overriding.
+    public static void main(String[] args) {
+        Animal a;       // Parent reference
+
+        a = new Dog();  // refers to Dog object
+        a.sound();      // Dog's version of sound()
+
+        a = new Cat();  // refers to Cat object
+        a.sound();      // Cat's version of sound()
+    }
+}
+
+what is Composition
+#####################
+Composition is a HAS-A relationship where one class contains another class, and the lifecycle of the contained object depends on the parent.
+Simple Example (Real Life) -
+A Car HAS-A Engine
+If the Car is destroyed → the Engine has no purpose
 
 what is Wrapper class in Java?
 ###############################
@@ -625,6 +836,64 @@ Shallow Cloning – Copies the object but references of contained objects are sh
 
 Deep Cloning – Creates a copy of the object and all objects it references
 
+Note
+=====
+Java 8 introduced lambdas and streams and laid the foundation for modern Java.
+Java 11 focused on performance improvements, new APIs, and cleanup.
+Java 17 adds modern language features like records and sealed classes.
+All three are LTS versions.
+Java 17 is preferred for new applications due to better security and performance.
 
 
+What is DTO why we use it?
+#############################
+A DTO (Data Transfer Object) is a simple Java object used to transfer data between layers (Controller ↔ Service ↔ Client).
+It contains only fields with getters and setters and no business logic.
+
+🔹 1️⃣ Data Hiding (Security) -Prevents exposing internal entity structure (like passwords, internal IDs)
+🔹 2️⃣ Loose Coupling - Separates API layer from database entities
+🔹 3️⃣ Performance - Sends only required data, not full entity
+🔹 4️⃣ Validation - Apply request-level validation using @NotNull, @Email, etc.
+
+What are SOLID Principles?
+##########################
+SOLID is a set of 5 object-oriented design principles that help developers write clean, maintainable, scalable, and flexible code.
+
+What is Open-Closed Principle
+##############################
+Open–Closed Principle states that a class should be open for extension but closed for modification. 
+example -
+
+interface Payment {
+    void pay();
+}
+
+class CardPayment implements Payment {
+    public void pay() {
+        System.out.println("Paid by Card");
+    }
+}
+
+class UpiPayment implements Payment {
+    public void pay() {
+        System.out.println("Paid by UPI");
+    }
+}
+
+class PaymentService {
+    void process(Payment payment){
+        payment.pay();
+    }
+
+    public static void main(String[] args) {
+        PaymentService service = new PaymentService();
+
+        // Creating objects and passing to service method
+        Payment p1 = new CardPayment();
+        Payment p2 = new UpiPayment();
+
+        service.process(p1); // Paid by Card
+        service.process(p2); // Paid by UPI
+    }
+}
 
