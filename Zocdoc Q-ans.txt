@@ -1,10 +1,25 @@
 Introduction
 ###############
-Hi, I’m Sanjeev Kumar, a Java backend developer with 3.5 years of experience in designing and developing scalable microservices applications. I have hands-on experience with Spring Boot, Hibernate, REST APIs, Microservices architecture, Redis caching, Kafka messaging, MySQL, AWS S3, and Stripe payment integration.
+"My name is Sanjeev Kumar. I have 3.5 years of experience as a Java Backend Developer. I worked in the healthcare domain where I contributed to building a Doctor Appointment System called CareConnect. My responsibilities included developing backend microservices using Spring Boot, creating secure REST APIs, and handling inter-service communication.
 
-I have built production-ready healthcare projects, including a doctor appointment booking system where I implemented end-to-end flows like doctor search, slot booking, payment processing, notifications, and fault-tolerant communication using Resilience4j. I also have experience with CI/CD pipelines (Jenkins/GitHub Actions), Docker, and Kubernetes deployments.
+I worked on performance optimization using Redis caching, asynchronous communication with Kafka, and payment integration for appointments. I also containerized services using Docker, deployed them on Kubernetes, and supported CI/CD pipelines for automated build and deployment. Overall, I was responsible for backend development, performance improvement, and production deployment support.
 
-I focus on writing clean, maintainable code, optimizing performance, and ensuring security and scalability in every project. I enjoy solving real-world problems and delivering solutions that improve user experience and business efficiency.
+If Interviewer Asks “What exactly did YOU do?”
+###############################################
+I,
+Developed and maintained microservices using Spring Boot
+
+Communicated between services via REST endpoints
+
+Optimized response time using Redis caching
+
+Handled background tasks and messaging with Kafka
+
+Containerized services using Docker
+
+Deployed on Kubernetes clusters
+
+Participated in CI/CD pipeline setup with Jenkins/GitHub Actions
 
 
 DOMAIN RELATED
