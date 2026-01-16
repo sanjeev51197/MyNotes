@@ -108,8 +108,8 @@ Developers & Testers 👩‍💻👨‍💻 (who estimate and clarify)
 
 
 Q: Can you explain backlog grooming with a real example?
-A: Sure! In our doctor booking project, we had a Product Backlog with all features like search, booking, and payments. During backlog grooming, our team discussed the “Search Doctor” story. We clarified requirements, split it into smaller user stories like ‘search by specialization’ and ‘search by area’, added acceptance criteria, and estimated the effort. After that, the Product Owner prioritized the story for the next sprint. This made our backlog clear and ready for development.
 
+A: Sure! In our doctor booking project, we had a Product Backlog with all features like search, booking, and payments. During backlog grooming, our team discussed the “Search Doctor” story. We clarified requirements, split it into smaller user stories like ‘search by specialization’ and ‘search by area’, added acceptance criteria, and estimated the effort. After that, the Product Owner prioritized the story for the next sprint. This made our backlog clear and ready for development.
 
 
 🎯  STORY POINTS
@@ -315,3 +315,35 @@ Sprint Retrospective → Team says, “Next time we’ll improve test coverage.�
 
 Then Sprint 2 starts, and you pick new features (like search or cancel). 🔁
  
+
+#How your task allocated to you?
+###################################
+Ans - Jira
+
+#What was the thing you could see in Scrum Board
+####################################################
+To do   ,    in Progress ,  and Done 
+
+So from where you have picking up the task?
+############################################
+ans - From the scrum Board i was picking up my task.
+
+How task allocated to you ?
+############################
+Sir i picked up the task  and i assigned it to myself   .
+
+
+Tester have reported the bug. 
+
+
+Retrospective Meeting
+######################
+A Retrospective Meeting (often called Sprint Retrospective) in Jira/Agile is a meeting held at the end of each sprint where the team reviews the sprint and discusses:
+
+What went well
+
+What didn’t go well / challenges
+
+What needs improvement in the next sprint
+
+Action items for improvement
