@@ -1,3 +1,4 @@
+
 🟦 What is Minikube?
 
 Minikube is a lightweight Kubernetes that runs on your local computer.
@@ -546,7 +547,21 @@ minikube service <service-name>
 
 ------------------------------------------------------------------------------------------------------------------
 ######### NodePort range → 30000–32767
+
 whatever we have done we will not deploy our application this way. this was just for practice purpose.
+
+Kubernetes Architecture
+
+“Kubernetes architecture mainly consists of two parts: the Control Plane and Worker Nodes.
+The Control Plane is responsible for managing the cluster, while Worker Nodes run the application workloads.
+
+The Control Plane includes the API Server, which is the entry point for all requests, etcd which stores the cluster state, the Scheduler which decides on which node a pod should run based on available resources, and the Controller Manager which continuously ensures the desired state is maintained.
+
+On the Worker Node side, we have Kubelet, which communicates with the control plane and manages pods on the node, the Container Runtime like Docker or containerd that actually runs the containers, and Kube Proxy which handles networking and service load balancing.
+
+When we deploy an application using kubectl, the request goes to the API Server, the state is stored in etcd, the Scheduler assigns the pod to a node, and Kubelet creates and runs the container. This is how Kubernetes ensures automation, scalability, and high availability.”
+
+
 
 #KUBERNATES RESOURCES
 ========================
@@ -1333,7 +1348,7 @@ echo deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc] \
   https://pkg.jenkins.io/debian-stable binary/ | sudo tee \
   /etc/apt/sources.list.d/jenkins.list > /dev/null
 sudo apt-get update
-sudo apt-get install Jenkins
+sudo apt-get install jenkins
 
 
 
@@ -1368,6 +1383,17 @@ sudo docker version
 
 #check installation
 -> docker -v
+
+👉 Add Jenkins user to Docker group
+#################################
+
+sudo usermod -aG docker jenkins
+
+Then restart services:'
+#######################
+
+sudo systemctl restart docker
+sudo systemctl restart jenkin
 
 Install AMAZON CLI in Jenkins Ubuntu
 -------------------------------------
