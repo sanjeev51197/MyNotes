@@ -162,7 +162,16 @@ sudo systemctl start jenkins
 sudo systemctl enable jenkins
 sudo systemctl status jenkins
 
+👉 Add Jenkins user to Docker group
+#################################
 
+sudo usermod -aG docker jenkins
+
+Then restart services:'
+#######################
+
+sudo systemctl restart docker
+sudo systemctl restart jenkin
 
 Step-6 : Open jenkins server in browser using VM public ip of linux vm
 ------------------------------------------------------------------------
