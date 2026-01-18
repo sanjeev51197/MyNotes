@@ -1,0 +1,223 @@
+Scheduler    //  Twilio
+#############################
+
+"In our project, we did not directly call the Twilio API from the main business service. Instead, we used Kafka to make the notification process asynchronous and decoupled. Whenever an event like appointment booking or payment confirmation occurred, the service published a notification event to a Kafka topic. A separate Notification microservice consumed this message and triggered Twilio APIs to send SMS or WhatsApp messages. This approach improved system performance, because the user did not have to wait for external API responses, and also increased reliability, since Kafka ensures message durability and retry handling in case of failures. It also allowed us to scale the notification service independently without impacting the core application."
+
+User Request
+     ↓
+Order / Booking Service
+     ↓
+Publish Event to Kafka Topic
+     ↓
+Kafka Broker
+     ↓
+Notification Service (Consumer)
+     ↓
+Twilio API (SMS / WhatsApp)
+
+
+
+Created project added springweb, devtools   annotated main class with @EnableScheduling 
+After that created a class Scheduler   annotated with @Component   .
+ next created a method schedulerTask()   and annotated with @Scheduled(cron="*/5 * * * * *)   .
+
+
+
+Now for SMS sending . we are using Twilio third party app.
+
+Twilio is a cloud communication platform that lets applications send:sms ,WhatsApp ,email via api 
+“Twilio provides REST APIs that allow applications to send SMS programmatically by authenticating with Account SID and Auth Token.”
+
+1️⃣ Create Twilio Account
+Get:
+Account SID
+Auth Token
+Twilio Phone Number
+
+
+add the twilio dependency in our project  .
+<dependency>
+    <groupId>com.twilio.sdk</groupId>
+    <artifactId>twilio</artifactId>
+    <version>9.2.3</version>
+</dependency>
+
+✅ Step 2: Add Credentials in application.properties
+twilio.account.sid=ACxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+twilio.auth.token=your_auth_token_here
+twilio.phone.number=+120XXXXXXXXX
+
+
+
+Step 3: Create Twilio Config Class
+
+import com.twilio.Twilio;
+import jakarta.annotation.PostConstruct;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Configuration;
+
+@Configuration
+public class TwilioConfig {
+
+    @Value("${twilio.account.sid}")
+    private String accountSid;
+
+    @Value("${twilio.auth.token}")
+    private String authToken;
+
+    @PostConstruct
+    public void initTwilio() {
+        Twilio.init(accountSid, authToken);
+    }
+}
+
+
+
+✅ Step 4: Create SMS Service
+
+import com.twilio.rest.api.v2010.account.Message;
+import com.twilio.type.PhoneNumber;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+
+@Service
+public class SmsService {
+
+    @Value("${twilio.phone.number}")
+    private String fromNumber;
+
+    public String sendSms(String to, String message) {
+
+        Message sms = Message.creator(
+                new PhoneNumber(to),
+                new PhoneNumber(fromNumber),
+                message
+        ).create();
+
+        return sms.getSid();
+    }
+}
+
+
+
+✅ Step 5: Create REST Controller
+package com.schedulerdemo.util;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequestMapping("/api/sms")
+public class SmsController {
+
+       @Autowired
+       private SmsService smsService;
+
+       @GetMapping("/send")
+       public String sendSms()
+       {
+               smsService.sendSms("+919884290790","Hii I'm from Twilio");
+               return "Message has been sent Successfully";
+       }
+}
+
+
+Step -7   Open browser and hit ---->  http://localhost:8080/api/sms/send
+
+
+
+Now if you want Email Notification Service 
+#################################################
+Send EMAIL Using Spring Boot (Gmail SMTP)
+
+Step -1 Add dependency
+
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-mail</artifactId>
+</dependency>
+
+✅ Step 2 — Gmail 16 digit App Password (go to setting , turn on two factor authenticaton and below down create) 
+
+✅ Step 3 — application.properties
+ 
+spring.mail.host=smtp.gmail.com
+spring.mail.port=587
+spring.mail.username=yourmail@gmail.com
+spring.mail.password=APP_PASSWORD
+
+spring.mail.properties.mail.smtp.auth=true
+spring.mail.properties.mail.smtp.starttls.enable=true
+
+
+
+✅ Step 4 — Email Service
+
+package com.schedulerdemo.util;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.stereotype.Service;
+
+@Service
+public class EmailService {
+
+    @Autowired
+    private JavaMailSender javaMailSender;
+
+    public void sendEmail(String to, String subject, String body) {
+
+
+        SimpleMailMessage message = new SimpleMailMessage();
+
+        message.setTo(to);
+        message.setSubject(subject);
+        message.setText(body);
+
+        javaMailSender.send(message);
+
+
+    }
+
+
+}
+
+
+
+✅ Step 5 — Create EmailController
+
+package com.schedulerdemo.util;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequestMapping("/api/email")
+public class EmailController {
+
+    @Autowired
+    private EmailService emailService;
+
+    @GetMapping("/send")
+    public String sendEmail()
+    {
+          emailService.sendEmail(
+                  "krsanjeev0502@gmail.com",
+                  "Booking Confirmation",
+                  "Your Booking has confirmed with Dr. Mukesh Kumar at 10pm ");
+
+          return "Email has been Sent Successfully";
+    }
+}
+
+
+Step -6 Open Browser . hit --> http://localhost:8080/api/email/send
+
+
+
