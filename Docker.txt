@@ -1,16 +1,20 @@
-Docker
-##########
-_____________
+
 1. What is Docker?
 #####################
 
 Docker is a containerization platform that allows you to package an application with all its dependencies into a lightweight, portable container so it runs consistently in any environment.
+Docker provides an isolated environment by running applications inside containers.
+
+These containers run consistently across different environments(local machine, testing, staging, and production)
+
+Docker is heavily used in Microservices because each service can run inside its own container, which is independent of others.
+It is also used in modern DevOps for CI/CD pipelines, distributed applications and cloud platforms like AWS, Azure etc.
+
+The main benefits of Docker is : Portability , Fast deployment , better resource utilization , and simplified scaling .
+
 
 -> Resolves Compatibility problem using containerization
 -> Docker will help us to install our software on different server without worrying about compatibility issue
-
--> To deploy same application on multiple servers for load balancing we need not manually install technology stack (like Angular 18v, java 17V etc) manually one by one if docker is not used
--> Software upgrades can be done easily on multiple machines using docker
 
 Note:
 ✔ Docker Engine acts as a bridge between the container and the host OS
@@ -21,6 +25,8 @@ Note:
 ################################
 
 A Docker container is a running instance of a Docker image.
+It provides an isolated environment where your application runs .
+It is dynamic it can be started ,stopped , paused or deleted .
 It contains everything needed to run an application → code, runtime, libraries, config.
 
 Think: “A small, isolated environment where your app runs.”
@@ -30,6 +36,7 @@ Think: “A small, isolated environment where your app runs.”
 ###########################
 A Docker image is a read-only template used to create containers.
 It includes the OS layer + application + dependencies.
+It is stored in registries which is docker hub where all images are stored. 
 
 Think: “Blueprint for containers.”
 
@@ -38,11 +45,42 @@ Think: “Blueprint for containers.”
 #####################
 A Dockerfile is a text file containing step-by-step instructions to build a Docker image.
 
+It defines base image , copy instructions and startup command for your application .
+Dockerfile automates the creation of Docker images in a repeatable and consistent way . 
+
+it replaces the manual setup (You write steps once in Dockerfile and anyone can build the same image using: docker build -t)
+
 Example:
 FROM openjdk:17
 COPY app.jar /app.jar
 CMD ["java","-jar","app.jar"]
 
+
+#What is Containerization
+##########################
+Containerization is the process of packaging an application with its dependencies into a container so it can run consistently in any environment. It provides lightweight, isolated, and portable application deployment.
+
+
+
+#What is Docker compose and when do you use it?
+###############################################
+Docker Compose is a tool which is used to define and run multiple Docker containers using a single YAML file.
+It is used when your application has multiple services (like app, database, Redis) and you want to start them together with one command.
+
+Advantage:You can start all services (app, database, cache) using one command: docker-compose up
+
+No need to run each container separately.
+
+
+
+#What is Docker volume and why it is used?
+##############################################
+Docker Volume is a storage mechanism which is used to persist data outside the container.
+It allows data to remain safe even if the container is deleted or restarted.
+
+Why Docker Volume is Used?
+Containers are temporary. Volumes keep important data (like database files) permanent.
+Multiple containers can share the same data using a volume.
 
 
 5. What is Docker Engine?
@@ -56,12 +94,9 @@ It has: Docker Daemon ,REST API ,CLI
 #########################
 A public registry where Docker images are stored and shared.
 
+Docker hub is a cloud based registry where you can store, share , and distribute docker images .
 
 
-7. What is a Docker Volume?
-###########################
-A volume is a persistent storage mechanism for containers.
-Even if a container is deleted, data inside the volume remains.
 
 8. What is a Docker Network?
 #############################
@@ -70,11 +105,6 @@ Even if a container is deleted, data inside the volume remains.
 Types:
 bridge (default)
 host
-
-9. What is Docker Compose?
-##########################
-
-It is A tool used to run multi-container applications using a docker-compose.yml file. ex -MySQL container ,SpringBoot container 
 
 
 10. What is Docker Registry?
@@ -85,6 +115,21 @@ It is A storage location where Docker images are kept (private or public).ex -Do
 ###################################
 Build: Creates an image using Dockerfile → docker build
 Run: Creates a container from image → docker run
+
+
+#What is Container Orchestration?
+#################################
+
+Container Orchestration means automatically managing and scaling Spring Boot microservice containers, handling deployments, load balancing, and self-healing using tools like Kubernetes to ensure high availability and reliability.
+
+Orchestration is essential for production environments running many containers, ensuring applications run reliably .
+
+
+#Difference Between CMD and ENTRYPOINT
+######################################
+CMD provides default arguments/command that can be overridden at runtime.
+ENTRYPOINT defines the main executable that always runs when the container starts. It is fixed and not meant to be overridden.
+
 
 Note:
 
@@ -101,30 +146,8 @@ Linux VM--->Install Docker Engine--->Docker Engine acts as bridge between Linux 
 #  lINUX vm
 ####################
 
-Docker Architecture:
-________________________________________________________________________
-Docker File: Here we will provide Intructions to create docker image
-Docker Image: Application Package with dependencies of it
-Docker Registry: Its a hub to store docker images
-Docker Container: Isolated environment to run docker image
 
-
-
-What is containerization?
-#########################
-containers package an application along with its dependencies (libraries, configuration files, etc.), ensuring that it runs consistently across different computing environments.
-
-#########################          #########################                  ####################                 @@@@@@@@@@@@@@@@@
-Dockerfile														%%%%%%%%
-															Container1
-(Contains instructions     ------>    Docker Image               ------------>  Docker hub/registry   ---------->       %%%%%%%%%
- to download dependencies   (build)	    (Application Code +   (Store)      (Collection of images)			Container2	
-				      Dependencies to run that)								%%%%%%%%%%
-)
-##########################	   ##########################                 #####################                 @@@@@@@@@@@@@@@@@
-
-															Linux Server
-
+														Linux Serve
 Installing Docker:
 _________________________
 

@@ -178,6 +178,15 @@ PATCH is used for a partial update.
 With PATCH, we only send the fields we want to change, and the server updates only those specific values, leaving the remaining data unchanged.
 
 
+@How do you implement pagination in SpringBoot?
+###############################################
+SpringBoot provides pagination using Pageable and Page interfaces from Spring Data JPA. We pass page number and page size from the API 
+and use PageRequest.of  to fetch limited records from the database.
+
+
+
+
+
 What is @Qualifier in Spring?
 ###############################
 @Qualifier is used in Spring to resolve ambiguity when more than one bean of the same type exists. It tells Spring which specific bean to inject when multiple choices are available.

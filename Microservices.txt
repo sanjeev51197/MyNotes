@@ -397,7 +397,7 @@ it acts a switch between the services to prevent from repeated calls .  it works
 
 4️⃣ Bulkhead -Isolates resources (like threads) to avoid full crash.
 
-5️⃣ TimeLimiter -Sets timeout for slow services.
+5️⃣ TimeLimiter  -Sets timeout for slow services.
 
 6️⃣ Fallback -Returns default/cached response when failure happens.
 
@@ -408,7 +408,7 @@ A circuit breaker is a pattern that stops calling a failing service to prevent t
 It protects the system from cascading failures, and uses fallback until the service recovers.”
 
 
-How it works -
+How it works -		
 Circuit Breaker has three state Closed, Open ,Half-Open    .      suppose  there is Service A and Service B 
 ######################################################
 Closed - when we say circuit are closed that means request are flowing properly across services.

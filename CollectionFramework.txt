@@ -727,6 +727,8 @@ Difference Between Comparable and Comparator
 ###############################################
 Comparable is meant for default natural sorting order, whereas Comparator is meant for customized sorting order.
 
+Comparable can do sorting of object based on only one parameter  .But comparator gives you option for sorting based on multiple parameter.
+
 Comparable interface is present in the java.lang package, while Comparator interface is present in the java.util package.
 
 Comparable contains only one method, that is compareTo() method, whereas Comparator contains two methods, that is compare() method and equals() method.
