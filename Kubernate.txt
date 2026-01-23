@@ -1393,7 +1393,7 @@ Then restart services:'
 #######################
 
 sudo systemctl restart docker
-sudo systemctl restart jenkin
+sudo systemctl restart jenkins
 
 Install AMAZON CLI in Jenkins Ubuntu
 -------------------------------------
