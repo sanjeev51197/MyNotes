@@ -19,7 +19,7 @@ You run the Spring Boot app → main() executes
 SpringApplication.run() starts the Spring context
 Auto-configuration configures beans
 Embedded Tomcat starts
-Your controllers/services/repos load
+Your controllers/services/repos loads
 Application becomes ready to receive requests
 
 
@@ -48,7 +48,7 @@ It Starts auto-configuration, component scanning, and bootstraps the app.
 
 What is @Configuration
 ################
-It Marks a class that contains bean definitions. It Equivalent to XML-based configuration.
+It Marks a class that contains bean definitions that should be managed by the Spring container.”
 
 
 what is Bean in SpringBoot?
@@ -63,12 +63,12 @@ Improves testability and maintainability
 
 What is @Bean
 #############
-It Used inside @Configuration classes to create custom beans manually.
+It is Used inside @Configuration classes to create custom beans manually.
 
 
 What is @Repository
 #####################
-It Marks a class as DAO (Data Access Layer).
+It Marks a class as DAO (Data Access Layer).  A Repository class in SpringBoot is used to communicate with the database. It contains methods for CRUD operations (Create, Read, Update, Delete)
 
 
 What is a Web Service?
@@ -85,19 +85,20 @@ A billing system communicating with an order system
 SOAP is a protocol that uses XML for data exchange and follows strict standards for communication. Often used in banking, telecom, enterprise systems.
 
 
-2. RESTful Web Services (Representational State Transfer)
+
+2. RESTful Web Services (Representational State Transfer):
 ##########################################################
 REST is an architectural style for building lightweight web services that use HTTP methods (GET, POST, PUT, DELETE) to perform CRUD operations.
 Features-
 Uses JSON (mostly), also XML
 Lightweight and fast
-Best suited for web, mobile apps, and microservices
+Best suited for web, mobile apps, and microservices.
 
 
 
 Simple Definition
 ##################
-Web Service is a mechanism that enables communication between applications over a network. There are two types: SOAP (protocol-based) and REST (architecture-based). RESTful web services are lightweight, fast, stateless services that use HTTP methods and usually return JSON data.
+Web Service is a mechanism that enables communication between applications over a network. There are two types: SOAP (protocol-based) and REST (architecture-based). RESTful web services are lightweight, fast, stateless services that uses HTTP methods and usually return JSON data.
 
 
 
@@ -111,12 +112,13 @@ This means:
 ✔ It handles HTTP requests (GET, POST, PUT, DELETE)
 ✔ It returns data (JSON/XML) directly to the client
 ✔ No need to return a view (HTML/JSP)
+
 🧠 Why do we use @RestController?
 
 It is used To build REST APIs quickly
 It Automatically converts Java objects → into  JSON using Jackson
 We don't need to write @ResponseBody on every method
-It Ideal for microservices.
+It is Ideal for microservices.
 
 
                            
@@ -185,11 +187,27 @@ and use PageRequest.of  to fetch limited records from the database.
 
 
 
+#How do you add two database in SprigBoot Project?
+####################################################
+"In my project, we needed to connect to two different databases. One was used for core business data and another for logging/audit purposes. So we configured multiple datasources in Spring Boot."
+
+"In my Spring Boot project, we configured two databases by defining multiple DataSource beans. First, we added separate database properties for each database in the application.properties file. Then we created two configuration classes where we configured DataSource, EntityManagerFactory, and TransactionManager for each database.
+
+We used @EnableJpaRepositories with basePackages to map repositories to their respective databases. We also used @Primary annotation to mark the default datasource.
+
+For better structure, we maintained separate entity and repository packages for each database. In the service layer, we injected both repositories and performed operations based on business requirements. For development and testing, we used H2 database and for production we used MySQL. This approach ensured clean separation and proper transaction handling."
+
+
 
 
 What is @Qualifier in Spring?
 ###############################
 @Qualifier is used in Spring to resolve ambiguity when more than one bean of the same type exists. It tells Spring which specific bean to inject when multiple choices are available.
+
+
+what is @Primary annotation?
+############################
+@Primary is a Spring annotation used to mark one bean as the DEFAULT choice when multiple beans of the same type exist.
 
 
 What is Postman?
@@ -207,7 +225,7 @@ In Spring Boot, Swagger helps developers and testers view all APIs in a clean UI
 
 What is Idempotent?
 ####################
-Idempotent means:  An operation that gives the same result, no matter how many times you repeat it.
+Idempotent means: An operation that gives the same result, no matter how many times you repeat it.
 
 In REST APIs, an HTTP method is idempotent if calling it once or multiple times produces the same effect on the server.
 GET method ,PUT METHOD , DELETE are idempotent method but POST is non-idempotent because calling multiple times it produces multiple record.
@@ -216,7 +234,7 @@ GET method ,PUT METHOD , DELETE are idempotent method but POST is non-idempotent
 What is Spring Boot Actuator?
 #############################
 Spring Boot Actuator is a built-in module in Spring Boot that provides production-ready monitoring and management features for your application.
-It helps DevOps, developers, and monitoring tools understand the app’s status.
+It helps developers, and monitoring tools understand the app’s status and health.
 It provides REST endpoints to monitor, manage, and get diagnostic information about your Spring Boot application in real time.
 
 
@@ -236,6 +254,11 @@ XML is a tag-based structured format suitable for complex data and used in SOAP-
 JSON is a lightweight, fast, and easy-to-read format widely used in REST APIs for data exchange.
 
 
+@Autowired 
+private EmployeeService employeeService, why we use private here?
+##################################################################
+We use private to follow Encapsulation (OOP principle) and protect the dependency from direct access/modification.
+
 
 How to Send Email in Spring Boot?
 #################################
@@ -253,6 +276,7 @@ spring.mail.properties.mail.smtp.starttls.enable=true
 
 Note: Use App Password, not your Gmail login password
 
+
 How do we use Global Exception Handling in Spring Boot?
 ########################################################
 In Spring Boot, Global Exception Handling allows you to handle all exceptions in one centralized place instead of writing try–catch in every controller.
@@ -264,16 +288,16 @@ When do we use @Valid in Spring Boot?
 We use @Valid when we want to perform validation on incoming data (usually request body or form input) before processing it.
 Spring Boot will automatically check all validation rules (like @NotNull, @Email, @Size, etc.) inside your DTO.
 
-What happens when validation fails?   --->   Spring returns a 400 Bad Request with validation error messages.
+What happens when validation fails? ---> Spring returns a 400 Bad Request with validation error messages.
 
-Where can @Valid be applied?
-#############################
-| Where?           | Example                              |
-| ---------------- | ------------------------------------ |
-| Request Body     | `@Valid @RequestBody UserDTO`        |
-| Path Variable    | `@Valid @PathVariable`               |
-| Query Parameter  | `@Valid @RequestParam`               |
-| Method arguments | `public void save(@Valid User user)` |
+Where can @Valid be applied? 
+###########################
+| Where?           | Example                            |
+| ---------------- | -----------------------------------|
+| Request Body     | @Valid @RequestBody UserDTO        |
+| Path Variable    | @Valid @PathVariable               |
+| Query Parameter  | @Valid @RequestParam               |
+| Method arguments | public void save(@Valid User user) |
 
 
 What does @SpringBootApplication do?
@@ -301,7 +325,7 @@ Why do we use it?
 ✔ To reduce boilerplate code
 
 
-how to exclude in Springboot?
+How to exclude in Springboot?
 ##############################
 "In Spring Boot, we can exclude auto-configurations using @SpringBootApplication(exclude), exclude dependencies using Maven exclusions, and prevent beans from loading using @ComponentScan exclude filters. This is useful when we want to avoid unwanted auto configuration, resolve dependency conflicts,
 
@@ -310,10 +334,14 @@ how to exclude in Springboot?
 //Controls filter execution order
 @Component
 public class JwtAuthenticationFilter implements GlobalFilter, Ordered {
-     //Used to verify JWT signature
-    private static final String SECRET_KEY = "my-super-secret-key";
+    
+      //Used to verify JWT signature
+      private static final String SECRET_KEY ="my-super-secret-key";
 
-    // Public endpoints
+      
+      //  
+
+     // Public endpoints
     //These APIs do not require JWT
     //Login & registration must be public
     private static final List<String> openEndpoints = List.of(
@@ -434,7 +462,7 @@ I identify performance problems by monitoring application metrics like response 
 I analyze slow APIs, database queries, and GC behavior to find bottlenecks.
 To solve them, I optimize queries, add caching, improve code efficiency, and tune JVM or application configurations.
 
-what is springboot dependency ? why we use dependency in SB?
+what is SpringBoot dependency ? why we use dependency in SB?
 ############################################################
 A Spring Boot dependency is a library added to the project (via Maven or Gradle) that provides specific functionality like web, data access, or security.
 We use dependencies in Spring Boot to avoid writing boilerplate code and to quickly enable features such as REST APIs, database connectivity, or security.
