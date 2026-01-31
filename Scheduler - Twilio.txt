@@ -208,7 +208,7 @@ public class EmailController {
     public String sendEmail()
     {
           emailService.sendEmail(
-                  "krsanjeev0502@gmail.com",
+                  "sk23@gmail.com",
                   "Booking Confirmation",
                   "Your Booking has confirmed with Dr. Mukesh Kumar at 10pm ");
 
