@@ -1,6 +1,6 @@
 Introduction
 ###############
-"My name is Sanjeev Kumar. I have 3.5 years of experience as a Java Backend Developer. I worked in the healthcare domain where I contributed to building a Doctor Appointment System called CareConnect. My responsibilities included developing backend microservices using Spring Boot, creating secure REST APIs, and handling inter-service communication.
+"My name is Sanjeev Kumar. I have 3.2 years of experience as a Java Backend Developer. I worked in the healthcare domain where I contributed to building a Doctor Appointment System called CareConnect. My responsibilities included developing backend microservices using Spring Boot, creating secure REST APIs, and handling inter-service communication.
 
 I worked on performance optimization using Redis caching, asynchronous communication with Kafka, and payment integration for appointments. I also containerized services using Docker, deployed them on Kubernetes, and supported CI/CD pipelines for automated build and deployment. Overall, I was responsible for backend development, performance improvement, and production deployment support.
 
@@ -29,30 +29,10 @@ DOMAIN RELATED
 ans:
 "My domain was Healthcare IT, and I focused on backend services for a CareConnect-like system handling doctor/patient management, bookings, payments, and notifications.
 
-Why did you choose this domain for your project?
-#################################################
-
-ans: I chose this domain because healthcare is critical and widely used, and there is a clear need to digitize appointment booking. Manual booking systems are slow, prone to errors, and inconvenient for both patients and doctors.
-
-3. How does your system solve problems in the healthcare domain?
-#################################################################
-ans :My system solves problems by allowing patients to search for doctors, check real-time availability, book appointments online, make secure payments, and get notifications. It also helps doctors manage schedules efficiently, avoiding overlaps and double bookings.
-
-
-What is the key business value of your application?
-###################################################
-ans: The key business value is efficiency, scalability, and reliability. It saves time for patients and doctors, reduces errors in scheduling, supports high traffic with microservices architecture, and provides a secure, automated workflow from search to payment.
-
-
-How is your system better than traditional manual appointment booking?
-
-ans : Compared to manual booking, my system offers real-time availability, online payments, automated notifications, and secure record-keeping. It eliminates phone calls, reduces missed appointments, avoids double-booking, and provides a centralized platform for doctors and patients, improving overall healthcare service quality.
-
 
 What was the biggest challenge you faced and how did you solve it?
+##################################################################
 ans : The biggest challenge was preventing double-booking when multiple patients tried the same slot. I solved it using a Redis distributed lock, a DB unique constraint, and transactional booking logic. This ensured consistency and reliable bookings under high traffic.
-
-
 
 
 
@@ -66,7 +46,7 @@ The system uses MySQL as the primary database, Redis for caching frequently acce
 
 
 What Was Your Role in the Project?
-
+##################################
 I worked as a Java Backend Developer with around 3.5 years of experience, 
 “I was responsible for backend microservice development, inter-service communication, payment integration, performance optimization using Redis, asynchronous messaging using Kafka, and deploying the application using Docker, Kubernetes, and CI/CD pipelines.”
 
@@ -89,15 +69,6 @@ ans: I used separate microservices because each part of the system has different
 Which Java version did you use in your project?
 ################################################
 ans :I used Java 17 in my project. Java 17 is a Long-Term Support (LTS) version and works very well with Spring Boot 3, which I used for building microservices. It provides better performance, long-term stability, and modern language features while remaining fully backward compatible with enterprise applications.
-
-
-Why didn’t you use Java 21?
-###########################
-ans :I did not use Java 21 mainly because Java 17 was the stable Long-Term Support (LTS) version officially recommended and widely adopted with Spring Boot 3 at the time of development. Java 17 provided all the features and performance improvements required for our microservices architecture, while ensuring maximum compatibility and long-term stability in production.
-
-Although Java 21 is also an LTS release, it was relatively newer, and not all enterprise libraries and frameworks had mature, production-proven support when the project was started. Since this was a business-critical healthcare booking system, we prioritized stability, ecosystem maturity, and lower upgrade risk over adopting the latest version.
-
-Additionally, the project did not require Java 21-specific features such as Virtual Threads, because our system already handled concurrency efficiently using asynchronous communication (Kafka) and scalable Kubernetes deployments.
 
 
 
